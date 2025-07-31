@@ -6,6 +6,10 @@ mas com algumas melhorias, principalmente na questão de pagamentos de mensalida
 
 
 Entidades:
+    => UserProfile:
+        -> User (usuário django)
+        -> Gym (qual academia este usuário pertence)
+
     => Gym:
         -> Modelo:
             -Nome da academia
@@ -20,6 +24,7 @@ Entidades:
             - Nome do aluno
             - Referência/cpf
             - Número de telefone
+            - Data de criação do aluno
 
         -> Cada aluno pertence a uma academia (Gym)
         -> Cada aluno tem seus Pagamentos
@@ -60,8 +65,6 @@ Entidades:
     => Situação dos alunos:
         -> Modelo:
             - status (em dia/atrasado)
-            - expirou em (data de expiração do último pagamento realizado)
-            
-
+            - expirou/expira em (data de expiração do último pagamento realizado)
     
         -> Cada aluno terá um status (em dia/em atraso)
