@@ -2,22 +2,21 @@ from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework.request import Request
 from rest_framework.decorators import api_view
+from rest_framework.views import APIView
+from rest_framework.generics import get_object_or_404
 from .models import Gym
 from .serializers import GymSerializer
 from app.utils.exceptions import CustomValidatorException
 
 
-from icecream import ic
+class GymListCreateAPIView(APIView):
 
-
-@api_view(["GET", "POST"])
-def gym_list_create_view(request: Request) -> Response:
-    if request.method == "GET":
+    def get(self, request: Request) -> Response:
         gyms = Gym.objects.all().order_by("name")
         serializer = GymSerializer(instance=gyms, many=True)
         return Response(serializer.data)
-
-    if request.method == "POST":
+    
+    def post(self, request: Request) -> Response:
         try:
             data = request.data
             serializer = GymSerializer(data=request.data)
@@ -33,6 +32,3 @@ def gym_list_create_view(request: Request) -> Response:
                 return Response(data=serializer.data)
         except CustomValidatorException as e:
             return Response({"detail": f"{e}"})
-
-
-
