@@ -1,0 +1,67 @@
+Como vai funcionar a api:
+
+
+Basicamente parecido com o projeto GyManager que está rodando atualmente,
+mas com algumas melhorias, principalmente na questão de pagamentos de mensalidades,
+
+
+Entidades:
+    => Gym:
+        -> Modelo:
+            -Nome da academia
+            -Dono da academia
+            -Referência da academia
+
+        -> Cada academia tem um dono
+        -> O sistema deve suportar várias academias
+
+    => Students
+        -> Modelo:
+            - Nome do aluno
+            - Referência/cpf
+            - Número de telefone
+
+        -> Cada aluno pertence a uma academia (Gym)
+        -> Cada aluno tem seus Pagamentos
+    
+    => Payments
+        -> Modelo:
+            - Data de criação do registro no banco de dados
+            - Data de pagamento(data de pagamento inserida pelo usuário (funcionário))
+            - Data do próximo pagamento (baseada na data de pagamento recebida)
+            - Aluno a qual pertence esse pagamento
+            - Pacote de pagamento utilizado
+            - Recebedor (qual usuário(funcionário) recebeu esse pagamento)
+            - Caixa (qual caixa esse pagamento pertence)
+            - Observações sobre o pagamento
+        
+        -> Cada pagamento pertence a um aluno
+        -> Cada pagamento tem que estar ligado a um caixa de algum dia.
+        -> Um novo pagamento não pode ter uma data de pagamento que esteja dentro do prazo válido do
+        pagamento anterior (entre a data de pagamento e a data de expiração), se o aluno realmente pagou
+        a assinatura antes do prazo de expiração (pagou adiantado), a data de pagamento deverá ser alterada
+        para a data de expiração do pagamento anterior, para que não haja "perda de dias" para o aluno.
+        -> Não deverá ser possível adicionar um pagamento no passado (com a data de pagamento anterior ao dia de hoje).
+        O pagamento deve ser registrado no dia que o usuário (funcionário) recebeu o dinheiro.
+
+        -> Como já foi mencionado, cada pagamento terá uma data de pagamento e uma data do próximo pagamento.
+        A faixa de tempo entre a data de pagamento e a data do próximo pagamento é o tempo válido que o aluno
+        poderá utilizar a academia, obviamente.
+        -> Nenhum novo pagamento poderá sobrepor sua faixa de tempo a outro que já esteja registrado.
+
+    => Caixa
+        -> Modelo:
+            - Data do Caixa
+            - Valor total do caixa
+            - Aberto ou Fechado
+        -> Se o caixa já foi fechado, significa que não é mais possível adicionar ou remover nada.
+        -> Se o caixa está aberto, está livre pra receber dinheiro.
+
+    => Situação dos alunos:
+        -> Modelo:
+            - status (em dia/atrasado)
+            - expirou em (data de expiração do último pagamento realizado)
+            
+
+    
+        -> Cada aluno terá um status (em dia/em atraso)
