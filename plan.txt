@@ -18,6 +18,7 @@ Entidades:
 
         -> Cada academia tem um dono
         -> O sistema deve suportar várias academias
+        -> Não deve existir duas academias com mesmo nome e referência
 
     => Students
         -> Modelo:
