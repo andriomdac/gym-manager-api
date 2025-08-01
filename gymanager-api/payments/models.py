@@ -1,0 +1,50 @@
+from django.db import models
+from django.core.validators import MinValueValidator
+from students.models import Student
+
+
+class PaymentMethod(models.Model):
+    name = models.CharField(max_length=10)
+
+    def __str__(self):
+        return self.name
+
+
+class PaymentPackage(models.Model):
+    name = models.CharField(max_length=10)
+
+    def __str__(self):
+        return self.name
+
+
+class Payment(models.Model):
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    payment_date = models.DateTimeField(blank=True, null=True)
+    next_payment_date = models.DateTimeField(blank=True, null=True)
+    student = models.ForeignKey(to=Student, on_delete=models.PROTECT, related_name='payments')
+    payment_package = models.ForeignKey(to=PaymentPackage, on_delete=models.PROTECT, related_name='payments')
+    observations = models.CharField(max_length=255)
+
+    def __str__(self):
+        return f"{self.payment_date}"
+
+
+class PaymentValue(models.Model):
+    payment = models.ForeignKey(
+        to=Payment,
+        on_delete=models.PROTECT,
+        related_name='payment_values'
+        )
+    payment_method = models.ForeignKey(
+        to=PaymentMethod,
+        on_delete=models.PROTECT,
+        related_name='payment_values'
+        )
+    value = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        validators=[MinValueValidator(0)])
+
+    def __str__(self):
+        return f"{self.payment} - {self.value}"
