@@ -29,6 +29,7 @@ Entidades:
 
         -> Cada aluno pertence a uma academia (Gym)
         -> Cada aluno tem seus Pagamentos
+        -> Não deve existir mais de um aluno com mesmo nome e referência
     
     => Payments
         -> Modelo:

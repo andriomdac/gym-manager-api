@@ -1,20 +1,8 @@
 from django.db import models
 from django.core.validators import MinValueValidator
 from students.models import Student
-
-
-class PaymentMethod(models.Model):
-    name = models.CharField(max_length=10)
-
-    def __str__(self):
-        return self.name
-
-
-class PaymentPackage(models.Model):
-    name = models.CharField(max_length=10)
-
-    def __str__(self):
-        return self.name
+from payment_packages.models import PaymentPackage
+from payment_methods.models import PaymentMethod
 
 
 class Payment(models.Model):
@@ -22,8 +10,16 @@ class Payment(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     payment_date = models.DateTimeField(blank=True, null=True)
     next_payment_date = models.DateTimeField(blank=True, null=True)
-    student = models.ForeignKey(to=Student, on_delete=models.PROTECT, related_name='payments')
-    payment_package = models.ForeignKey(to=PaymentPackage, on_delete=models.PROTECT, related_name='payments')
+    student = models.ForeignKey(
+        to=Student,
+        on_delete=models.PROTECT,
+        related_name='payments'
+        )
+    payment_package = models.ForeignKey(
+        to=PaymentPackage,
+        on_delete=models.PROTECT,
+        related_name='payments'
+        )
     observations = models.CharField(max_length=255)
 
     def __str__(self):

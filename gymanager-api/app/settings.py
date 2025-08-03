@@ -40,6 +40,9 @@ INSTALLED_APPS = [
     'rest_framework',
     'gyms',
     'students',
+    'payments',
+    'payment_methods',
+    'payment_packages',
 ]
 
 MIDDLEWARE = [
