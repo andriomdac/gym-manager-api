@@ -8,5 +8,5 @@ urlpatterns = [
     path('api/students/', include('students.urls')),
     path('api/students/<str:student_id>/payments/', include('payments.urls')),
     path('api/payment_methods/', include('payment_methods.urls')),
-#    path('api/payment_packages/', include('payment_packages.urls')),
+    path('api/payment_packages/', include('payment_packages.urls')),
 ]
