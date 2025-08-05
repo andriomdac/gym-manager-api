@@ -1,50 +1,36 @@
 from rest_framework.request import Request
+from rest_framework.serializers import Serializer
 from rest_framework.response import Response
-from rest_framework.views import APIView
 from rest_framework.generics import get_object_or_404
-from .models import PaymentMethod
-from .serializers import PaymentMethodSerializer
+from rest_framework.views import APIView
+from students.models import Student
+from .serializers import PaymentSerializer
+from django.utils import timezone
+from icecream import ic
 
 
-class PaymentMethodListCreateAPIView(APIView):
+def validate_payment_serializer(serializer) -> Serializer:
+    ic(serializer.validated_data)
+    return serializer
 
-    def get(self, request: Request) -> Response:
-        methods = PaymentMethod.objects.all().order_by("name")
-        serializer = PaymentMethodSerializer(data=methods, many=True)
+
+class PaymentsListCreateAPIView(APIView):
+
+    def get(self, request: Request, student_id: str) -> Response:
+        student = get_object_or_404(Student, id=student_id)
+        student_payments = student.payments.all()
+        serializer = PaymentSerializer(instance=student_payments, many=True)
         return Response(serializer.data)
 
-    def post(self, request: Request) -> Response:
-        return Response()
 
+    def post(self, request: Request, student_id: str) -> Response:
+        data = request.data
+        serializer = PaymentSerializer(data=data)
 
-class PaymentMethodRetrieveUpdateDeleteAPIView(APIView):
+        if serializer.is_valid():
+            serializer = validate_payment_serializer(serializer)
+            return Response({"message": "is valid"})
 
-    def get(self, request: Request, method_id: str) -> Response:
-        return Response()
+        else:
+            return Response(serializer.errors)
 
-    def put(self, request: Request, method_id: str) -> Response:
-        return Response()
-
-    def delete(self, request: Request, method_id: str) -> Response:
-        return Response()
-
-
-class PaymentPackageListCreateAPIView(APIView):
-
-    def get(self, request: Request) -> Response:
-        return Response()
-
-    def post(self, request: Request) -> Response:
-        return Response()
-
-
-class PaymentPackageRetrieveUpdateDeleteAPIView(APIView):
-
-    def get(self, request: Request, package_id: str) -> Response:
-        return Response()
-
-    def put(self, request: Request, package_id: str) -> Response:
-        return Response()
-
-    def delete(self, request: Request, package_id: str) -> Response:
-        return Response()

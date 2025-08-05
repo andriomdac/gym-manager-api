@@ -3,9 +3,11 @@ from django.core.validators import MinValueValidator
 from students.models import Student
 from payment_packages.models import PaymentPackage
 from payment_methods.models import PaymentMethod
+from uuid import uuid4
 
 
 class Payment(models.Model):
+    id = models.UUIDField(primary_key=True, editable=False, default=uuid4)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     payment_date = models.DateTimeField(blank=True, null=True)
