@@ -10,8 +10,8 @@ class Payment(models.Model):
     id = models.UUIDField(primary_key=True, editable=False, default=uuid4)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    payment_date = models.DateTimeField(blank=True, null=True)
-    next_payment_date = models.DateTimeField(blank=True, null=True)
+    payment_date = models.DateField(blank=True, null=True)
+    next_payment_date = models.DateField(blank=True, null=True)
     student = models.ForeignKey(
         to=Student,
         on_delete=models.PROTECT,
