@@ -14,11 +14,12 @@ from datetime import datetime, timedelta
 from cash_registers.models import CashRegister
 from datetime import datetime
 from .models import Payment
+from payment_packages.models import PaymentPackage
 
 
-def get_next_payment_date(payment_date: datetime, payment_package: str) -> datetime:
-    ic(payment_package)
-    return payment_date + timedelta(days=31)
+def get_next_payment_date(payment_date: datetime, payment_package_id: str) -> datetime:
+    payment_package = get_object_or_404(PaymentPackage, id=payment_package_id)
+    return payment_date + timedelta(days=payment_package.duration_days)
 
 
 def validate_payment_serializer(serializer: Serializer, student_id: str) -> Serializer:
@@ -35,7 +36,7 @@ def validate_payment_serializer(serializer: Serializer, student_id: str) -> Seri
 
     data["next_payment_date"] = get_next_payment_date(
         payment_date=payment_date,
-        payment_package=data["payment_package"]
+        payment_package_id=data["payment_package"]
         )
     data["student"] = student_id
 
