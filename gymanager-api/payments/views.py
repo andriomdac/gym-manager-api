@@ -13,9 +13,11 @@ from icecream import ic
 from datetime import datetime, timedelta
 from cash_registers.models import CashRegister
 from datetime import datetime
+from .models import Payment
 
 
 def get_next_payment_date(payment_date: datetime, payment_package: str) -> datetime:
+    ic(payment_package)
     return payment_date + timedelta(days=31)
 
 
@@ -73,3 +75,11 @@ class PaymentsListCreateAPIView(APIView):
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         except CustomValidatorException as e:
             return Response({"detail": f"{e}"}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class PaymentDeleteAPIView(APIView):
+
+    def delete(self, request: Request, payment_id: str, student_id: str) -> Response:
+        payment = get_object_or_404(Payment, id=payment_id)
+        payment.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
