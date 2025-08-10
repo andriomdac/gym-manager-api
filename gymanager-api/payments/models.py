@@ -4,6 +4,7 @@ from students.models import Student
 from payment_packages.models import PaymentPackage
 from payment_methods.models import PaymentMethod
 from uuid import uuid4
+from cash_registers.models import CashRegister
 
 
 class Payment(models.Model):
@@ -21,6 +22,11 @@ class Payment(models.Model):
         to=PaymentPackage,
         on_delete=models.PROTECT,
         related_name='payments'
+        )
+    cash_register = models.ForeignKey(
+        to=CashRegister,
+        on_delete=models.PROTECT,
+        related_name="payments"
         )
     observations = models.CharField(max_length=255)
 
