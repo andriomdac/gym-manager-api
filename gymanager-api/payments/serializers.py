@@ -1,13 +1,7 @@
 from rest_framework import serializers
-from .models import Payment, PaymentValue
+from .models import Payment
 from payment_packages.serializers import PaymentPackageSummarySerializer
 from students.serializers import StudentSummarySerializer
-
-
-class PaymentValueSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = PaymentValue
-        fields = "__all__"
 
 
 class PaymentSerializer(serializers.ModelSerializer):

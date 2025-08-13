@@ -15,7 +15,7 @@ from icecream import ic
 def update_cash_register_amount(register_id: str) -> None:
     register = get_object_or_404(CashRegister, id=register_id)
     for payment in register.payments.all():
-        ic(payment)
+        ic(payments)
     
 
 
