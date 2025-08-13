@@ -6,7 +6,7 @@ from rest_framework.serializers import Serializer
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.generics import get_object_or_404
-from .serializers import CashRegisterSerializer
+from .serializers import CashRegisterSerializer, CashRegisterDetailSerializer
 from .models import CashRegister
 
 
@@ -42,3 +42,10 @@ class CashRegisterClose(APIView):
             register.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(data={"detail": "cash register already closed"}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class CashRegisterDetail(APIView):
+    def get(self, request: Request, register_id: str) -> Response:
+        register = get_object_or_404(CashRegister, id=register_id)
+        serializer = CashRegisterDetailSerializer(instance=register)
+        return Response(serializer.data, status=status.HTTP_200_OK)
