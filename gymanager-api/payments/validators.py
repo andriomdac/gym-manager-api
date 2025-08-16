@@ -5,9 +5,10 @@ from rest_framework.generics import get_object_or_404
 from rest_framework.serializers import Serializer
 from app.utils.exceptions import CustomValidatorException
 from cash_registers.models import CashRegister
-from .serializers import PaymentSerializer
+from .serializers import PaymentSerializer, PaymentValueSerializer
 from .utils import get_next_payment_date
 from .models import Payment
+from payment_methods.models import PaymentMethod
 from students.models import Student
 
 
@@ -73,3 +74,20 @@ def validate_payment_deletion(payment: Payment) -> Payment:
         raise CustomValidatorException(
             "cannot delete this payment anymore, because it's cash register is already closed"
             )
+
+
+def validate_payment_value_serializer(
+    serializer: Serializer,
+    payment_id: str
+    ) -> Serializer:
+    data = serializer.initial_data
+    data["payment"] = payment_id
+    payment = get_object_or_404(Payment, id=payment_id)
+    
+    if "payment_method" in data:
+        method = get_object_or_404(PaymentMethod, id=data["payment_method"])
+        if payment.payment_values.filter(payment_method=data["payment_method"]).exists():
+            raise CustomValidatorException(f"method {method.name} already exists for this payment.")
+
+    new_serializer = PaymentValueSerializer(data=data)
+    return new_serializer

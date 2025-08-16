@@ -6,18 +6,20 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from app.utils.exceptions import CustomValidatorException
 from students.models import Student
-from .models import Payment
+from .models import Payment, PaymentValue
 from payment_methods.models import PaymentMethod
 from cash_registers.models import CashRegister
 from .serializers import PaymentSerializer, PaymentValueSerializer
-from .validators import validate_payment_serializer, validate_payment_deletion
+from .validators import validate_payment_serializer, validate_payment_deletion, validate_payment_value_serializer
 
 from icecream import ic
 
 def update_cash_register_amount(register_id: str) -> None:
     register = get_object_or_404(CashRegister, id=register_id)
     for payment in register.payments.all():
-        ic(payments)
+        for value in payment.payment_values.all():
+            register.amount += value.value
+    register.save()
     
 
 class PaymentsListCreateAPIView(APIView):
@@ -54,25 +56,13 @@ class PaymentDeleteAPIView(APIView):
             payment = get_object_or_404(Payment, id=payment_id)
             payment = validate_payment_deletion(payment)
             payment.delete()
+            update_cash_register_amount(register_id=payment.cash_register.id)
             return Response(status=status.HTTP_204_NO_CONTENT)
         except CustomValidatorException as e:
             return Response({"detail": f"{e}"}, status=status.HTTP_400_BAD_REQUEST)
 
 
-def validate_payment_value_serializer(
-    serializer: Serializer,
-    payment_id: str
-    ) -> Serializer:
-    data = serializer.initial_data
-    data["payment"] = payment_id
-    payment = get_object_or_404(Payment, id=payment_id)
-    method = get_object_or_404(PaymentMethod, id=data["payment_method"])
 
-    if payment.payment_values.filter(payment_method=data["payment_method"]).exists():
-        raise CustomValidatorException(f"method {method.name} already exists for this payment.")
-
-    new_serializer = PaymentValueSerializer(data=data)
-    return new_serializer
 
 
 class PaymentValuesListCreateAPIView(APIView):
@@ -97,14 +87,15 @@ class PaymentValuesListCreateAPIView(APIView):
         ) -> Response:
         try:
             data = request.data
+            payment = get_object_or_404(Payment, id=payment_id)
             serializer = PaymentValueSerializer(data=data)
             serializer = validate_payment_value_serializer(
                 serializer=serializer,
                 payment_id=payment_id
                 )
-            ic(serializer.initial_data)
             if serializer.is_valid():
                 serializer.save()
+                update_cash_register_amount(register_id=payment.cash_register.id)
                 return Response(serializer.data)
             else:
                 return Response(serializer.errors)
@@ -119,4 +110,7 @@ class PaymentValueDeleteAPIView(APIView):
         payment_id: str,
         value_id: str
         ) -> Response:
-        return Response()
+        value = get_object_or_404(PaymentValue, id=value_id)
+        value.delete()
+        update_cash_register_amount(register_id=value.payment.cash_register.id)
+        return Response(status=status.HTTP_204_NO_CONTENT)

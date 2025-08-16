@@ -35,6 +35,7 @@ class Payment(models.Model):
 
 
 class PaymentValue(models.Model):
+    id = models.UUIDField(primary_key=True, editable=False, default=uuid4)
     payment = models.ForeignKey(
         to=Payment,
         on_delete=models.PROTECT,
