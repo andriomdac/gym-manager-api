@@ -12,7 +12,6 @@ from cash_registers.models import CashRegister
 from .serializers import PaymentSerializer, PaymentValueSerializer
 from .validators import validate_payment_serializer, validate_payment_deletion, validate_payment_value_serializer
 
-from icecream import ic
 
 def update_cash_register_amount(register_id: str) -> None:
     register = get_object_or_404(CashRegister, id=register_id)
@@ -24,13 +23,23 @@ def update_cash_register_amount(register_id: str) -> None:
 
 class PaymentsListCreateAPIView(APIView):
 
-    def get(self, request: Request, student_id: str) -> Response:
+    def get(
+        self,
+        request: Request,
+        gym_id: str,
+        student_id: str
+        ) -> Response:
         student = get_object_or_404(Student, id=student_id)
         student_payments = student.payments.all()
         serializer = PaymentSerializer(instance=student_payments, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-    def post(self, request: Request, student_id: str) -> Response:
+    def post(
+        self,
+        request: Request,
+        gym_id: str,
+        student_id: str
+        ) -> Response:
         try:
             get_object_or_404(Student, id=student_id)
             serializer = PaymentSerializer(data=request.data)
@@ -51,7 +60,13 @@ class PaymentsListCreateAPIView(APIView):
 
 class PaymentDeleteAPIView(APIView):
 
-    def delete(self, request: Request, payment_id: str, student_id: str) -> Response:
+    def delete(
+        self,
+        request: Request,
+        gym_id: str,
+        payment_id: str,
+        student_id: str
+        ) -> Response:
         try:    
             payment = get_object_or_404(Payment, id=payment_id)
             payment = validate_payment_deletion(payment)
@@ -60,9 +75,6 @@ class PaymentDeleteAPIView(APIView):
             return Response(status=status.HTTP_204_NO_CONTENT)
         except CustomValidatorException as e:
             return Response({"detail": f"{e}"}, status=status.HTTP_400_BAD_REQUEST)
-
-
-
 
 
 class PaymentValuesListCreateAPIView(APIView):
@@ -102,10 +114,12 @@ class PaymentValuesListCreateAPIView(APIView):
         except CustomValidatorException as e:
             return Response({"detail": f"{e}"})
 
+
 class PaymentValueDeleteAPIView(APIView):
     def delete(
         self,
         request: Request,
+        gym_id: str,
         student_id: str,
         payment_id: str,
         value_id: str
