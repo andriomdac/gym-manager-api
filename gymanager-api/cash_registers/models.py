@@ -1,10 +1,11 @@
 from django.db import models
 from uuid import uuid4
 from django.core.validators import MinValueValidator
-
+from gyms.models import Gym
 
 class CashRegister(models.Model):
     id = models.UUIDField(primary_key=True, editable=False, default=uuid4)
+    gym = models.ForeignKey(to=Gym, on_delete=models.PROTECT, related_name="cash_registers")
     created_at = models.DateTimeField(auto_now_add=True)
     register_date = models.DateField(unique=True)
     is_opened = models.BooleanField(default=True)
