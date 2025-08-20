@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-_wcxxr$=n8j_2z4-c0v9w^dod&uun2ct(yi!t*33sm&air%r+7
 DEBUG = True
 
 ALLOWED_HOSTS = ["*",]
-
+CSRF_TRUSTED_ORIGINS = ["https://api-academia.caverna.lat",]
 
 # Application definition
 
