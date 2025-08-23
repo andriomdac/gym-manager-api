@@ -28,7 +28,7 @@ class Payment(models.Model):
         on_delete=models.PROTECT,
         related_name="payments"
     )
-    observations = models.CharField(max_length=255)
+    observations = models.CharField(max_length=255, blank=True, null=True)
 
     def __str__(self):
         return f"{self.payment_date}"
