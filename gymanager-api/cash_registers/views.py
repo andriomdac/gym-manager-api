@@ -10,7 +10,8 @@ from .serializers import CashRegisterSerializer, CashRegisterDetailSerializer
 from .models import CashRegister
 from datetime import datetime
 
-def validate_cash_resgister_serializer(
+
+def build_cash_resgister_serializer(
     serializer_instance: Serializer,
     gym_id: str
     ) -> Response:
@@ -40,7 +41,7 @@ class CashRegisterListCreate(APIView):
         ) -> Response:
         data = request.data
         serializer = CashRegisterSerializer(data=data)
-        serializer = validate_cash_resgister_serializer(
+        serializer = build_cash_resgister_serializer(
             serializer_instance=serializer,
             gym_id=gym_id
             )
