@@ -1,11 +1,12 @@
+from django.utils import timezone
 from rest_framework.response import Response
 from rest_framework.request import Request
 from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework.generics import get_object_or_404
-from .models import Student
+from .models import Student, StudentStatus
 from gyms.models import Gym
-from .serializers import StudentSerializer
+from .serializers import StudentSerializer, StudentStatusSerializer
 from app.utils.exceptions import CustomValidatorException
 from .validators import validate_student_serializer
 
@@ -91,3 +92,35 @@ class StudentRetrieveUpdateDestroyAPIView(APIView):
         student = get_object_or_404(Student, id=student_id)
         student.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class StudentStatusListUpdateAPIView(APIView):
+
+    def get(
+        self,
+        request: Request,
+        gym_id: str
+        ) -> Response:
+
+        students_status = StudentStatus.objects.filter(student__gym=gym_id)
+        serializer = StudentStatusSerializer(instance=students_status, many=True)
+
+        return Response(serializer.data)
+
+
+    def post(
+        self,
+        request: Request,
+        gym_id: str
+        ) -> Response:
+        
+        today = timezone.localdate()
+        for student in Student.objects.filter(gym=gym_id):
+            last_payment = student.payments.order_by("next_payment_date").last()
+            if last_payment:
+                status = StudentStatus.objects.get(student=student)
+                if today > last_payment.next_payment_date:
+                    status.is_overdue = False
+                    status.save()
+        return Response()
+

@@ -9,8 +9,7 @@ def validate_student_serializer(
     ) -> Serializer:
     data = serializer_instance.initial_data
 
-    if "gym" in data:
-        data["gym"] = gym_id
+    data["gym"] = gym_id
 
     if "name" in data and "reference" in data:
         if Student.objects.filter(
