@@ -10,7 +10,8 @@ from .models import Payment, PaymentValue
 from payment_methods.models import PaymentMethod
 from cash_registers.models import CashRegister
 from .serializers import PaymentSerializer, PaymentValueSerializer
-from .validators import validate_payment_serializer, validate_payment_deletion, validate_payment_value_serializer
+from .validators import validate_payment_deletion, validate_payment_value_serializer
+from .serializer_builders import build_payment_serializer
 
 
 def update_cash_register_amount(register_id: str) -> None:
@@ -41,13 +42,13 @@ class PaymentsListCreateAPIView(APIView):
         student_id: str
         ) -> Response:
         try:
-            get_object_or_404(Student, id=student_id)
             serializer = PaymentSerializer(data=request.data)
-            serializer = validate_payment_serializer(
+            serializer = build_payment_serializer(
                 serializer=serializer,
                 student_id=student_id
             )
             if serializer.is_valid():
+                validate_payment_value_serializer
                 serializer.save()
                 update_cash_register_amount(serializer.data["cash_register"])
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -82,7 +83,8 @@ class PaymentValuesListCreateAPIView(APIView):
         self,
         request: Request,
         student_id: str,
-        payment_id: str
+        payment_id: str,
+        gym_id: str
         ) -> Response:
 
         payment = get_object_or_404(Payment, id=payment_id)
@@ -95,7 +97,8 @@ class PaymentValuesListCreateAPIView(APIView):
         self,
         request: Request,
         student_id: str,
-        payment_id: str
+        payment_id: str,
+        gym_id: str
         ) -> Response:
         try:
             data = request.data
@@ -108,11 +111,11 @@ class PaymentValuesListCreateAPIView(APIView):
             if serializer.is_valid():
                 serializer.save()
                 update_cash_register_amount(register_id=payment.cash_register.id)
-                return Response(serializer.data)
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
             else:
-                return Response(serializer.errors)
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         except CustomValidatorException as e:
-            return Response({"detail": f"{e}"})
+            return Response({"detail": f"{e}"}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class PaymentValueDeleteAPIView(APIView):
