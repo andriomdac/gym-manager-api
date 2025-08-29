@@ -19,7 +19,7 @@ class Student(models.Model):
 
 class StudentStatus(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
-    student = models.ForeignKey(to=Student,unique=True, on_delete=models.PROTECT, related_name="status")
+    student = models.ForeignKey(to=Student,unique=True, on_delete=models.CASCADE, related_name="status")
     is_overdue = models.BooleanField(default=True)
     last_checked = models.DateField(blank=True, null=True)
     
