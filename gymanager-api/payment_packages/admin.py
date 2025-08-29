@@ -1,3 +1,7 @@
 from django.contrib import admin
+from .models import PaymentPackage
 
-# Register your models here.
+
+@admin.register(PaymentPackage)
+class PaymentPackageAdmin(admin.ModelAdmin):
+    list_display = ["name", "duration_days",]  
