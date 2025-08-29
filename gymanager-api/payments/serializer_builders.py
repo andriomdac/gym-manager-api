@@ -7,6 +7,7 @@ from payments.serializers import PaymentSerializer
 from app.utils.exceptions import CustomValidatorException
 from cash_registers.models import CashRegister
 
+from icecream import ic
 
 def build_payment_serializer(serializer: Serializer, student_id: str) -> Serializer:
     data = serializer.initial_data
@@ -25,10 +26,16 @@ def build_payment_serializer(serializer: Serializer, student_id: str) -> Seriali
         # No previous payments -> this is the first one
         data["payment_date"] = today
 
-    if not "cash_register" in data:
+    ic("antes da condicional de cash_register")
+    if "cash_register" in data:
+        try:
+            CashRegister.objects.get(id=data["cash_register"])
+        except CashRegister.DoesNotExist:
+            raise CustomValidatorException("Cash Register not found")
+    else:
         try:
             register = CashRegister.objects.get(register_date=today)
-            data["cash_register"] = register.id        
+            data["cash_register"] = register.id
         except CashRegister.DoesNotExist:
             raise CustomValidatorException("There isn't a cash register for today. Please create one")
 
@@ -37,5 +44,4 @@ def build_payment_serializer(serializer: Serializer, student_id: str) -> Seriali
         payment_date=data.get("payment_date"),
         payment_package_id=data.get("payment_package")
     )
-
     return PaymentSerializer(data=data)

@@ -38,7 +38,7 @@ class PaymentValue(models.Model):
     id = models.UUIDField(primary_key=True, editable=False, default=uuid4)
     payment = models.ForeignKey(
         to=Payment,
-        on_delete=models.PROTECT,
+        on_delete=models.CASCADE,
         related_name='payment_values'
     )
     payment_method = models.ForeignKey(

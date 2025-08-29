@@ -3,6 +3,7 @@ from django.utils import timezone
 from icecream import ic
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
+from rest_framework.request import Request
 from rest_framework.serializers import Serializer
 from app.utils.exceptions import CustomValidatorException
 from cash_registers.models import CashRegister
@@ -14,11 +15,8 @@ from students.models import Student
 
 
 def validate_payment_serializer(serializer: Serializer, student_id: str) -> Serializer:
-    if "cash_register" in data:
-        cash_register = get_object_or_404(CashRegister, id=data["cash_register"])
-    else:
-        raise CustomValidatorException("'cash_register' field not found")
-
+    data = serializer.validated_data
+    cash_register = data["cash_register"]
     if cash_register.payments.filter(student=data["student"]).exists():
         raise CustomValidatorException(
             "there is already a payment of this student in this cash register"
@@ -51,6 +49,10 @@ def validate_payment_value_serializer(
     
     if "payment_method" in data:
         method = get_object_or_404(PaymentMethod, id=data["payment_method"])
+        
+        if not payment.cash_register.is_opened:
+            raise CustomValidatorException("cannot modify this payment anymore, because it's cash register is already closed")
+            
         if payment.payment_values.filter(payment_method=data["payment_method"]).exists():
             raise CustomValidatorException(f"method {method.name} already exists for this payment.")
 
