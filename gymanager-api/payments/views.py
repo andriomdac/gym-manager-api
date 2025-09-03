@@ -9,19 +9,14 @@ from students.models import Student
 from .models import Payment, PaymentValue
 from payment_methods.models import PaymentMethod
 from cash_registers.models import CashRegister
-from .serializers import PaymentSerializer, PaymentValueSerializer
+from .serializers import PaymentSerializer, PaymentValueSerializer, PaymentDetailSerializer
 from .validators import validate_payment_deletion, validate_payment_value_serializer, validate_payment_serializer
 from .serializer_builders import build_payment_serializer
 
 
-
-
-
-
-from icecream import ic
-
 def update_cash_register_amount(register_id: str) -> None:
     register = get_object_or_404(CashRegister, id=register_id)
+    register.amount = 0
     for payment in register.payments.all():
         for value in payment.payment_values.all():
             register.amount += value.value
@@ -38,7 +33,7 @@ class PaymentsListCreateAPIView(APIView):
         ) -> Response:
         student = get_object_or_404(Student, id=student_id)
         student_payments = student.payments.all()
-        serializer = PaymentSerializer(instance=student_payments, many=True)
+        serializer = PaymentDetailSerializer(instance=student_payments, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(
@@ -53,11 +48,8 @@ class PaymentsListCreateAPIView(APIView):
                 serializer=serializer,
                 student_id=student_id
             )
-            ic(serializer.initial_data)
             if serializer.is_valid():
-                ic("valid")
                 validate_payment_serializer(serializer=serializer, student_id=student_id)
-                ic("custom valid")
                 serializer.save()
                 update_cash_register_amount(serializer.data["cash_register"])
                 return Response(serializer.data, status=status.HTTP_201_CREATED)

@@ -11,9 +11,8 @@ def validate_student_serializer(
 
     data["gym"] = gym_id
 
-    if "name" in data and "reference" in data:
-        if Student.objects.filter(
-            name=data["name"],
-            reference=data["reference"]).exists():
-            raise CustomValidatorException("student with this name and reference already exists.")
+    if Student.objects.filter(
+        name=data.get("name", ""),
+        reference=data.get("reference", "")).exists():
+        raise CustomValidatorException("student with this name and reference already exists.")
     return serializer_instance
