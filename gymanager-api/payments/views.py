@@ -60,7 +60,18 @@ class PaymentsListCreateAPIView(APIView):
             return Response({"detail": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 
-class PaymentDeleteAPIView(APIView):
+class PaymentDetailDeleteAPIView(APIView):
+
+    def get(
+        self,
+        request: Request,
+        gym_id: str,
+        payment_id: str,
+        student_id: str,
+        ) -> Response:
+        payment = get_object_or_404(Payment, id=payment_id)
+        serializer = PaymentDetailSerializer(instance=payment)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     def delete(
         self,
@@ -132,3 +143,21 @@ class PaymentValueDeleteAPIView(APIView):
         value.delete()
         update_cash_register_amount(register_id=value.payment.cash_register.id)
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+class PaymentValuesDeleteAllAPIView(APIView):
+
+    def delete(
+        self,
+        request: Request,
+        gym_id: str,
+        student_id: str,
+        payment_id: str
+        ) -> Response:
+        payment = get_object_or_404(Payment, id=payment_id)
+        values = payment.payment_values.all()
+        if values:
+            for value in values:
+                value.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+        
+            
