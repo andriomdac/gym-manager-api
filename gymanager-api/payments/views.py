@@ -32,7 +32,7 @@ class PaymentsListCreateAPIView(APIView):
         student_id: str
         ) -> Response:
         student = get_object_or_404(Student, id=student_id)
-        student_payments = student.payments.all()
+        student_payments = student.payments.all().order_by('next_payment_date')
         serializer = PaymentDetailSerializer(instance=student_payments, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
