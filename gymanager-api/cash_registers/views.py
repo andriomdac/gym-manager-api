@@ -30,7 +30,7 @@ class CashRegisterListCreate(APIView):
         request: Request,
         gym_id: str,
         ) -> Response:
-        registers = CashRegister.objects.filter(gym=gym_id).order_by('register_date')
+        registers = CashRegister.objects.filter(gym=gym_id).order_by('-register_date')
         serializer = CashRegisterSerializer(instance=registers, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
