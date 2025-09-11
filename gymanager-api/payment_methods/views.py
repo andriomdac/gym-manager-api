@@ -8,14 +8,23 @@ from .models import PaymentMethod
 from .serializers import PaymentMethodSerializer
 from app.utils.exceptions import CustomValidatorException
 from .validators import validate_payment_method
+from app.utils.paginator import paginate_serializer
+from rest_framework.pagination import PageNumberPagination
 
 
 class PaymentMethodListCreateAPIView(APIView):
 
     def get(self, request: Request) -> Response:
         methods = PaymentMethod.objects.all()
-        serializer = PaymentMethodSerializer(instance=methods, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        paginator = PageNumberPagination()
+        serializer = paginate_serializer(
+            queryset=methods,
+            request=request,
+            serializer=PaymentMethodSerializer,
+            paginator=paginator
+        )
+        
+        return paginator.get_paginated_response(serializer.data)
 
     def post(self, request: Request) -> Response:
         try:

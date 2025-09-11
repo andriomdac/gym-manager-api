@@ -33,6 +33,7 @@ INSTALLED_APPS = [
     'payment_methods',
     'payment_packages',
     'cash_registers',
+    'profiles',
 ]
 
 MIDDLEWARE = [

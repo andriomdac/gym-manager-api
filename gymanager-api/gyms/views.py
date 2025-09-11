@@ -7,14 +7,21 @@ from .models import Gym
 from .serializers import GymSerializer
 from app.utils.exceptions import CustomValidatorException
 from .validators import validate_gym_serializer
-
+from app.utils.paginator import paginate_serializer
+from rest_framework.pagination import PageNumberPagination
 
 class GymListCreateAPIView(APIView):
 
     def get(self, request: Request) -> Response:
         gyms = Gym.objects.all().order_by("name")
-        serializer = GymSerializer(instance=gyms, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        paginator = PageNumberPagination()
+        serializer = paginate_serializer(
+            queryset=gyms,
+            request=request,
+            serializer=GymSerializer,
+            paginator=paginator
+        )
+        return paginator.get_paginated_response(serializer.data)
 
     def post(self, request: Request) -> Response:
         try:

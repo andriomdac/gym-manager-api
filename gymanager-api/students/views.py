@@ -9,6 +9,8 @@ from gyms.models import Gym
 from .serializers import StudentSerializer, StudentStatusSerializer
 from app.utils.exceptions import CustomValidatorException
 from .validators import validate_student_serializer
+from app.utils.paginator import paginate_serializer
+from rest_framework.pagination import PageNumberPagination
 
 
 class StudentListCreateAPIView(APIView):
@@ -20,8 +22,16 @@ class StudentListCreateAPIView(APIView):
         ) -> Response:
         gym = get_object_or_404(Gym, id=gym_id)
         students = Student.objects.filter(gym=gym).order_by("name")
-        serializer = StudentSerializer(instance=students, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        
+        paginator = PageNumberPagination()
+        serializer = paginate_serializer(
+            queryset=students,
+            request=request,
+            serializer=StudentSerializer,
+            paginator=paginator
+        )
+        
+        return paginator.get_paginated_response(serializer.data)
 
     def post(
         self,

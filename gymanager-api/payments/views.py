@@ -12,16 +12,10 @@ from cash_registers.models import CashRegister
 from .serializers import PaymentSerializer, PaymentValueSerializer, PaymentDetailSerializer
 from .validators import validate_payment_deletion, validate_payment_value_serializer, validate_payment_serializer
 from .serializer_builders import build_payment_serializer
+from app.utils.paginator import paginate_serializer
+from rest_framework.pagination import PageNumberPagination
+from cash_registers.utils import update_cash_register_amount    
 
-
-def update_cash_register_amount(register_id: str) -> None:
-    register = get_object_or_404(CashRegister, id=register_id)
-    register.amount = 0
-    for payment in register.payments.all():
-        for value in payment.payment_values.all():
-            register.amount += value.value
-    register.save()
-    
 
 class PaymentsListCreateAPIView(APIView):
 
@@ -33,8 +27,16 @@ class PaymentsListCreateAPIView(APIView):
         ) -> Response:
         student = get_object_or_404(Student, id=student_id)
         student_payments = student.payments.all().order_by('-next_payment_date')
-        serializer = PaymentDetailSerializer(instance=student_payments, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        
+        paginator = PageNumberPagination()
+        serializer = paginate_serializer(
+            queryset=student_payments,
+            request=request,
+            serializer=PaymentSerializer,
+            paginator=paginator
+        )
+        
+        return paginator.get_paginated_response(serializer.data)
 
     def post(
         self,
@@ -101,9 +103,16 @@ class PaymentValuesListCreateAPIView(APIView):
 
         payment = get_object_or_404(Payment, id=payment_id)
         values = payment.payment_values.all()
-        serializer = PaymentValueSerializer(instance=values, many=True)
         
-        return Response(serializer.data)
+        paginator = PageNumberPagination()
+        serializer = paginate_serializer(
+            queryset=values,
+            request=request,
+            serializer=PaymentValueSerializer,
+            paginator=paginator
+        )
+        
+        return paginator.get_paginated_response(serializer.data)
 
     def post(
         self,

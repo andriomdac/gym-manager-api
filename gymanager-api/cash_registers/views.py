@@ -9,6 +9,8 @@ from rest_framework.generics import get_object_or_404
 from .serializers import CashRegisterSerializer, CashRegisterDetailSerializer
 from .models import CashRegister
 from datetime import datetime
+from app.utils.paginator import paginate_serializer
+from rest_framework.pagination import PageNumberPagination
 
 
 def build_cash_resgister_serializer(
@@ -16,7 +18,6 @@ def build_cash_resgister_serializer(
     gym_id: str
     ) -> Response:
     data = serializer_instance.initial_data
-
     data["gym"] = gym_id
     if not "register_date" in data:
         data["register_date"] = datetime.today().date()
@@ -31,8 +32,14 @@ class CashRegisterListCreate(APIView):
         gym_id: str,
         ) -> Response:
         registers = CashRegister.objects.filter(gym=gym_id).order_by('-register_date')
-        serializer = CashRegisterSerializer(instance=registers, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        paginator = PageNumberPagination()
+        serializer = paginate_serializer(
+            queryset=registers,
+            request=request,
+            serializer=CashRegisterSerializer,
+            paginator=paginator
+        )
+        return paginator.get_paginated_response(serializer.data)
 
     def post(
         self,
