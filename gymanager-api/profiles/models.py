@@ -5,7 +5,7 @@ from gyms.models import Gym
 
 
 class UserProfile(models.Model):
-    id = models.AutoField(primary_key=True)
+    id = models.BigAutoField(primary_key=True)
     uuid = models.UUIDField(default=uuid4, editable=False, unique=True)
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
     gym = models.ForeignKey(Gym, on_delete=models.PROTECT, related_name='profile', null=True, blank=True)

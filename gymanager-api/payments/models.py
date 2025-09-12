@@ -8,7 +8,7 @@ from payment_methods.models import PaymentMethod
 
 
 class Payment(models.Model):
-    id = models.AutoField(primary_key=True)
+    id = models.BigAutoField(primary_key=True)
     uuid = models.UUIDField(default=uuid4, editable=False, unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -36,7 +36,7 @@ class Payment(models.Model):
 
 
 class PaymentValue(models.Model):
-    id = models.AutoField(primary_key=True)
+    id = models.BigAutoField(primary_key=True)
     uuid = models.UUIDField(default=uuid4, editable=False, unique=True)
     payment = models.ForeignKey(
         to=Payment,
