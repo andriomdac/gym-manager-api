@@ -10,6 +10,7 @@ from .validators import validate_gym_serializer
 from app.utils.paginator import paginate_serializer
 from rest_framework.pagination import PageNumberPagination
 
+
 class GymListCreateAPIView(APIView):
 
     def get(self, request: Request) -> Response:

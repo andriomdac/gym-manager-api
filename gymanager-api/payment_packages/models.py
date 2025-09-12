@@ -4,7 +4,8 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 
 
 class PaymentPackage(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
+    id = models.AutoField(primary_key=True)
+    uuid = models.UUIDField(default=uuid4, editable=False, unique=True)
     name = models.CharField(max_length=10)
     duration_days = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(372)])
 

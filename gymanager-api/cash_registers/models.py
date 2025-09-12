@@ -4,7 +4,8 @@ from django.core.validators import MinValueValidator
 from gyms.models import Gym
 
 class CashRegister(models.Model):
-    id = models.UUIDField(primary_key=True, editable=False, default=uuid4)
+    id = models.AutoField(primary_key=True)
+    uuid = models.UUIDField(default=uuid4, editable=False, unique=True)
     gym = models.ForeignKey(to=Gym, on_delete=models.PROTECT, related_name="cash_registers")
     created_at = models.DateTimeField(auto_now_add=True)
     register_date = models.DateField(unique=True)
@@ -14,7 +15,7 @@ class CashRegister(models.Model):
         decimal_places=2,
         default=0,
         validators=[MinValueValidator(0.00)]
-        )
+    )
 
     def __str__(self):
         return f"{self.register_date}"

@@ -4,7 +4,8 @@ from gyms.models import Gym
 
 
 class Student(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
+    id = models.AutoField(primary_key=True)
+    uuid = models.UUIDField(default=uuid4, editable=False, unique=True)
     gym = models.ForeignKey(to=Gym, on_delete=models.PROTECT, related_name="students")
     name = models.CharField(max_length=100)
     reference = models.CharField(max_length=100)
@@ -16,10 +17,10 @@ class Student(models.Model):
         return self.name
 
 
-
 class StudentStatus(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
-    student = models.ForeignKey(to=Student,unique=True, on_delete=models.CASCADE, related_name="status")
+    id = models.AutoField(primary_key=True)
+    uuid = models.UUIDField(default=uuid4, editable=False, unique=True)
+    student = models.ForeignKey(to=Student, unique=True, on_delete=models.CASCADE, related_name="status")
     is_overdue = models.BooleanField(default=True)
     last_checked = models.DateField(blank=True, null=True)
     
