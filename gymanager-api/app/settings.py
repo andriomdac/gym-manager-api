@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     'payment_packages',
     'cash_registers',
     'profiles',
+    'tokens',
 ]
 
 MIDDLEWARE = [
