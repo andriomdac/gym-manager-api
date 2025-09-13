@@ -9,6 +9,7 @@ urlpatterns = [
     path('api/token/', include('tokens.urls')),
 
     path('api/users/', include('profiles.urls')),
+    path('api/roles/', include('roles.urls')),
     
     path('api/gyms/', include('gyms.urls')),
 

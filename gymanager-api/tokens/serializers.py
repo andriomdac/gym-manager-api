@@ -6,5 +6,5 @@ class TokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
     def get_token(cls, user):
         token = super().get_token(user=user)
-        token["user_id"] = f"id"
+        token["user_profile_uuid"] = f"{user.profile.uuid}"
         return token
