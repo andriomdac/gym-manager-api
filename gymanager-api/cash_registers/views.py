@@ -11,21 +11,13 @@ from .models import CashRegister
 from datetime import datetime
 from app.utils.paginator import paginate_serializer
 from rest_framework.pagination import PageNumberPagination
-
-
-def build_cash_resgister_serializer(
-    serializer_instance: Serializer,
-    gym_id: str
-    ) -> Response:
-    data = serializer_instance.initial_data
-    data["gym"] = gym_id
-    if not "register_date" in data:
-        data["register_date"] = datetime.today().date()
-    return serializer_instance
-
+from .utils import build_cash_resgister_serializer
+from app.utils.permissions import IsManager, IsStaff
 
 class CashRegisterListCreate(APIView):
-
+    
+    permission_classes = [IsStaff, IsManager]
+    
     def get(
         self,
         request: Request,
