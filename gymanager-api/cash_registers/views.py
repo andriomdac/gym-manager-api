@@ -12,12 +12,14 @@ from datetime import datetime
 from app.utils.paginator import paginate_serializer
 from rest_framework.pagination import PageNumberPagination
 from .utils import build_cash_resgister_serializer
-from app.utils.permissions import IsManager, IsStaff
+from app.utils.permissions import AllowRoles
+
 
 class CashRegisterListCreate(APIView):
     
-    permission_classes = [IsStaff, IsManager]
-    
+    def get_permissions(self):
+        return [AllowRoles(["manager"])]
+
     def get(
         self,
         request: Request,
@@ -52,6 +54,10 @@ class CashRegisterListCreate(APIView):
 
 
 class CashRegisterClose(APIView):
+
+    def get_permissions(self):
+        return [AllowRoles(["manager"])]
+    
     def post(
         self,
         request: Request,
@@ -69,6 +75,10 @@ class CashRegisterClose(APIView):
 
 
 class CashRegisterDetail(APIView):
+
+    def get_permissions(self):
+        return [AllowRoles(["manager"])]
+
     def get(
         self,
         request: Request,

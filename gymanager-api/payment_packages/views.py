@@ -10,10 +10,16 @@ from app.utils.exceptions import CustomValidatorException
 from .validators import validate_payment_package
 from app.utils.paginator import paginate_serializer
 from rest_framework.pagination import PageNumberPagination
+from app.utils.permissions import AllowRoles
 
 
 class PaymentPackageListCreateAPIView(APIView):
 
+    def get_permissions(self):
+        if self.request.method == "GET":
+            return [AllowRoles(["staff", "manager"])]
+        return [AllowRoles()]
+    
     def get(self, request: Request) -> Response:
         packages = PaymentPackage.objects.all()
         paginator = PageNumberPagination()
@@ -43,6 +49,11 @@ class PaymentPackageListCreateAPIView(APIView):
 
 
 class PaymentPackageRetrieveUpdateDeleteAPIView(APIView):
+
+    def get_permissions(self):
+        if self.request.method == "GET":
+            return [AllowRoles(["staff", "manager"])]
+        return [AllowRoles()]
 
     def get(self, request: Request, package_id: str) -> Response:
         package = get_object_or_404(PaymentPackage, id=package_id)

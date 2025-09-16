@@ -15,9 +15,13 @@ from .serializer_builders import build_payment_serializer
 from app.utils.paginator import paginate_serializer
 from rest_framework.pagination import PageNumberPagination
 from cash_registers.utils import update_cash_register_amount    
+from app.utils.permissions import AllowRoles
 
 
 class PaymentsListCreateAPIView(APIView):
+
+    def get_permissions(self):
+        return [AllowRoles(["staff", "manager"])]
 
     def get(
         self,
@@ -63,6 +67,11 @@ class PaymentsListCreateAPIView(APIView):
 
 
 class PaymentDetailDeleteAPIView(APIView):
+    
+    def get_permissions(self):
+        if self.request.method == "GET":
+            return [AllowRoles(["staff", "manager"])]
+        return [AllowRoles()]
 
     def get(
         self,
@@ -93,6 +102,10 @@ class PaymentDetailDeleteAPIView(APIView):
 
 
 class PaymentValuesListCreateAPIView(APIView):
+
+    def get_permissions(self):
+        return [AllowRoles(["staff", "manager"])]
+
     def get(
         self,
         request: Request,
@@ -140,6 +153,10 @@ class PaymentValuesListCreateAPIView(APIView):
 
 
 class PaymentValueDeleteAPIView(APIView):
+
+    def get_permissions(self):
+        return [AllowRoles(["staff", "manager"])]
+    
     def delete(
         self,
         request: Request,
@@ -153,7 +170,11 @@ class PaymentValueDeleteAPIView(APIView):
         update_cash_register_amount(register_id=value.payment.cash_register.id)
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+
 class PaymentValuesDeleteAllAPIView(APIView):
+
+    def get_permissions(self):
+        return [AllowRoles(["staff", "manager"])]
 
     def delete(
         self,

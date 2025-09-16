@@ -11,9 +11,13 @@ from app.utils.exceptions import CustomValidatorException
 from .validators import validate_student_serializer
 from app.utils.paginator import paginate_serializer
 from rest_framework.pagination import PageNumberPagination
+from app.utils.permissions import AllowRoles
 
 
 class StudentListCreateAPIView(APIView):
+
+    def get_permissions(self):
+        return [AllowRoles(["staff", "manager"])]
 
     def get(
         self,
@@ -63,6 +67,11 @@ class StudentListCreateAPIView(APIView):
 
 class StudentRetrieveUpdateDestroyAPIView(APIView):
 
+    def get_permissions(self):
+        if self.request.method == "GET":
+            return [AllowRoles(["staff", "manager"])]
+        return [AllowRoles(["manager"])]
+
     def get(
         self,
         request: Request,
@@ -105,6 +114,9 @@ class StudentRetrieveUpdateDestroyAPIView(APIView):
 
 
 class StudentStatusListUpdateAPIView(APIView):
+    
+    def get_permissions(self):
+        return [AllowRoles(["staff", "manager"])]
 
     def get(
         self,
@@ -114,7 +126,6 @@ class StudentStatusListUpdateAPIView(APIView):
 
         students_status = StudentStatus.objects.filter(student__gym=gym_id)
         serializer = StudentStatusSerializer(instance=students_status, many=True)
-
         return Response(serializer.data)
 
 

@@ -10,9 +10,15 @@ from app.utils.exceptions import CustomValidatorException
 from .validators import validate_payment_method
 from app.utils.paginator import paginate_serializer
 from rest_framework.pagination import PageNumberPagination
+from app.utils.permissions import AllowRoles
 
 
 class PaymentMethodListCreateAPIView(APIView):
+
+    def get_permissions(self):
+        if self.request.method == "GET":
+            return [AllowRoles(["staff", "manager"])]
+        return [AllowRoles()]
 
     def get(self, request: Request) -> Response:
         methods = PaymentMethod.objects.all()
@@ -44,6 +50,11 @@ class PaymentMethodListCreateAPIView(APIView):
 
 
 class PaymentMethodRetrieveUpdateDeleteAPIView(APIView):
+
+    def get_permissions(self):
+        if self.request.method == "GET":
+            return [AllowRoles(["staff", "manager"])]
+        return [AllowRoles()]
 
     def get(self, request: Request, method_id: str) -> Response:
         method = get_object_or_404(PaymentMethod, id=method_id)

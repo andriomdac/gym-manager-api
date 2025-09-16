@@ -8,10 +8,13 @@ from rest_framework.serializers import Serializer
 from .serializers import UserSerializer
 from rest_framework.pagination import PageNumberPagination
 from app.utils.paginator import paginate_serializer
-
+from app.utils.permissions import AllowRoles
 
 class UserListCreateAPIView(APIView):
     
+    def get_permissions(self):
+        return [AllowRoles()]
+
     def get(self, request: Request):
         users = User.objects.all()
         paginator = PageNumberPagination()

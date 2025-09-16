@@ -9,10 +9,14 @@ from app.utils.exceptions import CustomValidatorException
 from .validators import validate_gym_serializer
 from app.utils.paginator import paginate_serializer
 from rest_framework.pagination import PageNumberPagination
+from app.utils.permissions import AllowRoles
 
 
 class GymListCreateAPIView(APIView):
-
+    
+    def get_permissions(self):
+        return [AllowRoles()]
+    
     def get(self, request: Request) -> Response:
         gyms = Gym.objects.all().order_by("name")
         paginator = PageNumberPagination()
@@ -46,6 +50,9 @@ class GymListCreateAPIView(APIView):
 
 
 class GymRetrieveUpdateDestroyAPIView(APIView):
+
+    def get_permissions(self):
+        return [AllowRoles()]
 
     def get(self, request: Request, gym_uuid: str) -> Response:
         gym = get_object_or_404(Gym, id=gym_uuid)

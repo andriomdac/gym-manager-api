@@ -7,10 +7,13 @@ from app.utils.paginator import paginate_serializer
 from rest_framework.pagination import PageNumberPagination
 from .models import Role
 from .serializers import RoleSerializer
-
+from app.utils.permissions import AllowRoles
 
 class RoleListCreateAPIView(APIView):
-    
+
+    def get_permissions(self):
+        return [AllowRoles()]    
+
     def get(self, request: Request):
         queryset = Role.objects.all()
         paginator = PageNumberPagination()

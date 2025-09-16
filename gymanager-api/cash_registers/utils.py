@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from datetime import datetime
 from .models import CashRegister
 
+
 def build_cash_resgister_serializer(
     serializer_instance: Serializer,
     gym_id: str
