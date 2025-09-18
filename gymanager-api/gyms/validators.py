@@ -10,6 +10,6 @@ def validate_gym_serializer(serializer_instance) -> Serializer:
         reference=data["reference"]
     ).exists():
         raise CustomValidatorException(
-            "Gym with this name and reference already exists."
+            "Academia com este nome e referência já existe."
             )
     return serializer_instance

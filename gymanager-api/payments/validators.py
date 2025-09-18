@@ -19,11 +19,11 @@ def validate_payment_serializer(serializer: Serializer, student_id: str) -> Seri
     cash_register = data["cash_register"]
     if cash_register.payments.filter(student=data["student"]).exists():
         raise CustomValidatorException(
-            "there is already a payment of this student in this cash register"
+            "Já existe um pagamento deste aluno neste caixa."
         )
 
     if not cash_register.is_opened:
-        raise CustomValidatorException("cannot add new payment to a closed cash register.")
+        raise CustomValidatorException("Não é possível adicionar novo pagamento a um caixa fechado.")
 
 
 def validate_payment_deletion(payment: Payment) -> Payment:
@@ -35,7 +35,7 @@ def validate_payment_deletion(payment: Payment) -> Payment:
         return payment
     else:
         raise CustomValidatorException(
-            "cannot delete this payment anymore, because it's cash register is already closed"
+            "Não é mais possível excluir este pagamento, pois seu caixa já está fechado."
             )
 
 
@@ -51,10 +51,10 @@ def validate_payment_value_serializer(
         method = get_object_or_404(PaymentMethod, id=data["payment_method"])
         
         if not payment.cash_register.is_opened:
-            raise CustomValidatorException("cannot modify this payment anymore, because it's cash register is already closed")
+            raise CustomValidatorException("Não é mais possível modificar este pagamento, pois seu caixa já está fechado.")
             
         if payment.payment_values.filter(payment_method=data["payment_method"]).exists():
-            raise CustomValidatorException(f"method {method.name} already exists for this payment.")
+            raise CustomValidatorException(f"O método {method.name} já existe para este pagamento.")
 
     new_serializer = PaymentValueSerializer(data=data)
     return new_serializer

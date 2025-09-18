@@ -26,9 +26,9 @@ class PaymentsListCreateAPIView(APIView):
     def get(
         self,
         request: Request,
-        gym_id: str,
-        student_id: str
+        student_id: int
         ) -> Response:
+        gym_id = request.user.profile.gym.id
         student = get_object_or_404(Student, id=student_id)
         student_payments = student.payments.all().order_by('-next_payment_date')
         
@@ -45,10 +45,10 @@ class PaymentsListCreateAPIView(APIView):
     def post(
         self,
         request: Request,
-        gym_id: str,
-        student_id: str
+        student_id: int
         ) -> Response:
         try:
+            gym_id = request.user.profile.gym.id
             serializer = PaymentSerializer(data=request.data)
             serializer = build_payment_serializer(
                 serializer=serializer,
@@ -76,10 +76,10 @@ class PaymentDetailDeleteAPIView(APIView):
     def get(
         self,
         request: Request,
-        gym_id: str,
-        payment_id: str,
-        student_id: str,
+        payment_id: int,
+        student_id: int,
         ) -> Response:
+        gym_id = request.user.profile.gym.id
         payment = get_object_or_404(Payment, id=payment_id)
         serializer = PaymentDetailSerializer(instance=payment)
         return Response(serializer.data, status=status.HTTP_200_OK)
@@ -87,11 +87,11 @@ class PaymentDetailDeleteAPIView(APIView):
     def delete(
         self,
         request: Request,
-        gym_id: str,
-        payment_id: str,
-        student_id: str
+        payment_id: int,
+        student_id: int
         ) -> Response:
-        try:    
+        try:
+            gym_id = request.user.profile.gym.id
             payment = get_object_or_404(Payment, id=payment_id)
             payment = validate_payment_deletion(payment)
             payment.delete()
@@ -109,11 +109,10 @@ class PaymentValuesListCreateAPIView(APIView):
     def get(
         self,
         request: Request,
-        student_id: str,
-        payment_id: str,
-        gym_id: str
+        student_id: int,
+        payment_id: int,
         ) -> Response:
-
+        gym_id = request.user.profile.gym.id
         payment = get_object_or_404(Payment, id=payment_id)
         values = payment.payment_values.all()
         
@@ -130,11 +129,11 @@ class PaymentValuesListCreateAPIView(APIView):
     def post(
         self,
         request: Request,
-        student_id: str,
-        payment_id: str,
-        gym_id: str
+        student_id: int,
+        payment_id: int,
         ) -> Response:
         try:
+            gym_id = request.user.profile.gym.id
             data = request.data
             payment = get_object_or_404(Payment, id=payment_id)
             serializer = PaymentValueSerializer(data=data)
@@ -160,11 +159,11 @@ class PaymentValueDeleteAPIView(APIView):
     def delete(
         self,
         request: Request,
-        gym_id: str,
-        student_id: str,
-        payment_id: str,
-        value_id: str
+        student_id: int,
+        payment_id: int,
+        value_id: int
         ) -> Response:
+        gym_id = request.user.profile.gym.id
         value = get_object_or_404(PaymentValue, id=value_id)
         value.delete()
         update_cash_register_amount(register_id=value.payment.cash_register.id)
@@ -179,10 +178,10 @@ class PaymentValuesDeleteAllAPIView(APIView):
     def delete(
         self,
         request: Request,
-        gym_id: str,
-        student_id: str,
-        payment_id: str
+        student_id: int,
+        payment_id: int
         ) -> Response:
+        gym_id = request.user.profile.gym.id
         payment = get_object_or_404(Payment, id=payment_id)
         values = payment.payment_values.all()
         if values:

@@ -11,7 +11,7 @@ def build_cash_resgister_serializer(
     ) -> Response:
     data = serializer_instance.initial_data
     data["gym"] = gym_id
-    if not "register_date" in data:
+    if "register_date" not in data:
         data["register_date"] = datetime.today().date()
     return serializer_instance
 
@@ -23,3 +23,4 @@ def update_cash_register_amount(register_id: str) -> None:
         for value in payment.payment_values.all():
             register.amount += value.value
     register.save()
+

@@ -26,18 +26,17 @@ def build_payment_serializer(serializer: Serializer, student_id: str) -> Seriali
         # No previous payments -> this is the first one
         data["payment_date"] = today
 
-    ic("antes da condicional de cash_register")
     if "cash_register" in data:
         try:
             CashRegister.objects.get(id=data["cash_register"])
         except CashRegister.DoesNotExist:
-            raise CustomValidatorException("Cash Register not found")
+            raise CustomValidatorException("Caixa não encontrado")
     else:
         try:
             register = CashRegister.objects.get(register_date=today)
             data["cash_register"] = register.id
         except CashRegister.DoesNotExist:
-            raise CustomValidatorException("There isn't a cash register for today. Please create one")
+            raise CustomValidatorException("Não existe um caixa para hoje. Por favor, crie um.")
 
 
     data["next_payment_date"] = get_next_payment_date(

@@ -55,12 +55,12 @@ class PaymentPackageRetrieveUpdateDeleteAPIView(APIView):
             return [AllowRoles(["staff", "manager"])]
         return [AllowRoles()]
 
-    def get(self, request: Request, package_id: str) -> Response:
+    def get(self, request: Request, package_id: int) -> Response:
         package = get_object_or_404(PaymentPackage, id=package_id)
         serializer = PaymentPackageSerializer(instance=package)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
-    def delete(self, request: Request, package_id: str) -> Response:
+    def delete(self, request: Request, package_id: int) -> Response:
         package = get_object_or_404(PaymentPackage, id=package_id)
         package.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)

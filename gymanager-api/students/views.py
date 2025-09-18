@@ -22,8 +22,8 @@ class StudentListCreateAPIView(APIView):
     def get(
         self,
         request: Request,
-        gym_id: str
         ) -> Response:
+        gym_id = request.user.profile.gym.id
         gym = get_object_or_404(Gym, id=gym_id)
         students = Student.objects.filter(gym=gym).order_by("name")
         
@@ -40,9 +40,9 @@ class StudentListCreateAPIView(APIView):
     def post(
         self,
         request: Request,
-        gym_id: str
         ) -> Response:
         try:
+            gym_id = request.user.profile.gym.id
             data = request.data
             serializer = StudentSerializer(data=data)
             serializer = validate_student_serializer(
@@ -75,9 +75,9 @@ class StudentRetrieveUpdateDestroyAPIView(APIView):
     def get(
         self,
         request: Request,
-        gym_id: str,
-        student_id: str
+        student_id: int
         ) -> Response:
+        gym_id = request.user.profile.gym.id
         student = get_object_or_404(Student, id=student_id)
         serializer = StudentSerializer(student)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
@@ -85,10 +85,10 @@ class StudentRetrieveUpdateDestroyAPIView(APIView):
     def put(
         self,
         request: Request,
-        gym_id: str,
-        student_id: str
+        student_id: int
         ) -> Response:
         try:
+            gym_id = request.user.profile.gym.id
             student = get_object_or_404(Student, id=student_id)
             data = request.data
             serializer = StudentSerializer(instance=student, data=data)
@@ -105,9 +105,9 @@ class StudentRetrieveUpdateDestroyAPIView(APIView):
     def delete(
         self,
         request: Request,
-        gym_id: str,
-        student_id: str,
+        student_id: int,
         ) -> Response:
+        gym_id = request.user.profile.gym.id
         student = get_object_or_404(Student, id=student_id)
         student.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
@@ -121,9 +121,8 @@ class StudentStatusListUpdateAPIView(APIView):
     def get(
         self,
         request: Request,
-        gym_id: str
         ) -> Response:
-
+        gym_id = request.user.profile.gym.id
         students_status = StudentStatus.objects.filter(student__gym=gym_id)
         serializer = StudentStatusSerializer(instance=students_status, many=True)
         return Response(serializer.data)
@@ -132,9 +131,8 @@ class StudentStatusListUpdateAPIView(APIView):
     def post(
         self,
         request: Request,
-        gym_id: str
         ) -> Response:
-        
+        gym_id = request.user.profile.gym.id
         today = timezone.localdate()
         for student in Student.objects.filter(gym=gym_id):
             last_payment = student.payments.order_by("next_payment_date").last()

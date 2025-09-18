@@ -18,7 +18,8 @@ class PaymentMethodListCreateAPIView(APIView):
     def get_permissions(self):
         if self.request.method == "GET":
             return [AllowRoles(["staff", "manager"])]
-        return [AllowRoles()]
+        else:
+            return [AllowRoles()]
 
     def get(self, request: Request) -> Response:
         methods = PaymentMethod.objects.all()
@@ -56,12 +57,12 @@ class PaymentMethodRetrieveUpdateDeleteAPIView(APIView):
             return [AllowRoles(["staff", "manager"])]
         return [AllowRoles()]
 
-    def get(self, request: Request, method_id: str) -> Response:
+    def get(self, request: Request, method_id: int) -> Response:
         method = get_object_or_404(PaymentMethod, id=method_id)
         serializer = PaymentMethodSerializer(instance=method)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
-    def delete(self, request: Request, method_id: str) -> Response:
+    def delete(self, request: Request, method_id: int) -> Response:
         method = get_object_or_404(PaymentMethod, id=method_id)
         method.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)

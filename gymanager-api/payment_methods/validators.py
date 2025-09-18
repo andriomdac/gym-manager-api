@@ -6,5 +6,5 @@ from app.utils.exceptions import CustomValidatorException
 def validate_payment_method(serializer: Serializer) -> Serializer:
     data = serializer.validated_data
     if PaymentMethod.objects.filter(name=data["name"]).exists():
-        raise CustomValidatorException("payment method with same name already exists.")
+        raise CustomValidatorException("Método de pagamento com o mesmo nome já existe.")
     return serializer

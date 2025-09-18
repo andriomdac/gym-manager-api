@@ -54,14 +54,14 @@ class GymRetrieveUpdateDestroyAPIView(APIView):
     def get_permissions(self):
         return [AllowRoles()]
 
-    def get(self, request: Request, gym_uuid: str) -> Response:
-        gym = get_object_or_404(Gym, id=gym_uuid)
+    def get(self, request: Request, gym_id: int) -> Response:
+        gym = get_object_or_404(Gym, id=gym_id)
         serializer = GymSerializer(gym)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
-    def put(self, request: Request, gym_uuid: str) -> Response:
+    def put(self, request: Request, gym_id: int) -> Response:
         try:
-            gym = get_object_or_404(Gym, id=gym_uuid)
+            gym = get_object_or_404(Gym, id=gym_id)
             data = request.data
             serializer = GymSerializer(instance=gym, data=data)
 
@@ -74,7 +74,7 @@ class GymRetrieveUpdateDestroyAPIView(APIView):
         except CustomValidatorException as e:
             return Response({"detail": f"{e}"})
 
-    def delete(self, request: Request, gym_uuid: str) -> Response:
-        gym = get_object_or_404(Gym, id=gym_uuid)
+    def delete(self, request: Request, gym_id: int) -> Response:
+        gym = get_object_or_404(Gym, id=gym_id)
         gym.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
