@@ -5,9 +5,12 @@ Django==5.2.4
 djangorestframework==3.16.0
 djangorestframework_simplejwt==5.5.1
 executing==2.2.0
+greenlet==3.2.4
 gunicorn==23.0.0
 icecream==2.1.5
+msgpack==1.1.1
 packaging==25.0
 Pygments==2.19.2
 PyJWT==2.10.1
+pynvim==0.6.0
 sqlparse==0.5.3
