@@ -19,4 +19,6 @@ urlpatterns = [
 
     path('api/payment-methods/', include('payment_methods.urls')),
     path('api/payment-packages/', include('payment_packages.urls')),
+
+    path('', include('frontend.urls')),
 ]

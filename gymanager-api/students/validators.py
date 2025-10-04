@@ -14,5 +14,5 @@ def validate_student_serializer(
     if Student.objects.filter(
         name=data.get("name", ""),
         reference=data.get("reference", "")).exists():
-        raise CustomValidatorException("student with this name and reference already exists.")
+        raise CustomValidatorException("Aluno com mesmo nome e referência já existe.")
     return serializer_instance
