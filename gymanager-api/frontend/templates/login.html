@@ -191,7 +191,8 @@
       </ul>
     </div>
     <main class="form-signin w-100 m-auto">
-      <form>
+      <form method='post'>
+        {% csrf_token %}
         <img
           class="mb-4"
           src="{% static 'bootstrap/assets/brand/bootstrap-logo.svg' %}"
@@ -204,7 +205,7 @@
           <input
             type="text"
             class="form-control"
-            id="floatingInput"
+            name="username"
             placeholder="name@example.com"
           />
           <label for="floatingInput">Usuário</label>
@@ -213,7 +214,7 @@
           <input
             type="password"
             class="form-control"
-            id="floatingPassword"
+            name="password"
             placeholder="Password"
           />
           <label for="floatingPassword">Senha</label>
