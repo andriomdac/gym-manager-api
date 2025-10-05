@@ -6,13 +6,12 @@ from django.shortcuts import render
 def home(request):
     return render(
         request,
-        template_name='home.html'
+        template_name='base.html'
     )
 
 
-
-def add_student(request):
+def login(request):
     return render(
         request,
-        template_name='add_student.html'
+        template_name='login.html'
     )
