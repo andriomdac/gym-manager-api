@@ -16,6 +16,6 @@ def validate_session(func):
                 refresh = client.refresh_token(refresh_token=refresh)
                 if refresh.status_code == 200:
                     request.session["access"] = refresh.json()["access"]
-                    return redirect("home")
+                    return func(request, *args, **kwargs)
         return redirect(to="login")
     return wrapper

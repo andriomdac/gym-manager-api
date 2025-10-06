@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6 col-lg-5">
+      <div class="card shadow-lg border-0">
+        <div class="card-header bg-dark text-center py-3">
+          <h4 class="mb-0 text-white">
+            <i class="bi bi-person-plus-fill me-2"></i>Matrícula
+          </h4>
+        </div>
+        
+        <div class="card-body bg-light p-4">
+          <form method='post' class="needs-validation" novalidate>
+            {% csrf_token %}
+            
+            <div class="mb-3">
+              <label for="name" class="form-label fw-semibold">Nome</label>
+              <input 
+                type="text" 
+                class="form-control" 
+                id="name" 
+                name="name" 
+                placeholder="Digite seu nome completo"
+                required>
+            </div>
+
+            <div class="mb-3">
+              <label for="phone" class="form-label fw-semibold">Telefone</label>
+              <input 
+                type="tel" 
+                class="form-control" 
+                id="phone" 
+                name="phone" 
+                placeholder="(00) 00000-0000"
+                required>
+            </div>
+
+            <div class="mb-3">
+              <label for="reference" class="form-label fw-semibold">Referência</label>
+              <input 
+                type="text" 
+                class="form-control" 
+                id="reference" 
+                name="reference" 
+                placeholder="Como nos conheceu?">
+            </div>
+            <div class="d-grid gap-2 mt-4">
+              <button type="submit" class="btn btn-success btn-lg w-100">
+                <i class="bi bi-check-circle me-2"></i>Confirmar
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
