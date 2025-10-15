@@ -1,6 +1,5 @@
 def build_api_headers(request) -> dict:
-    access_token = request.session.get("access_token")
     return {
-                "Authorization": f"Bearer {access_token}",
+                "Authorization": f"Bearer {request.session.get('access')}",
                 "Content-Type": "application/json" 
             }

@@ -10,7 +10,7 @@
       content="Mark Otto, Jacob Thornton, and Bootstrap contributors"
     />
     <meta name="generator" content="Astro v5.13.2" />
-    <title>Signin Template · Bootstrap v5.3</title>
+    <title>login</title>
     <link
       rel="canonical"
       href="{% static 'examples/sign-in/' %}"
@@ -193,13 +193,6 @@
     <main class="form-signin w-100 m-auto">
       <form method='post'>
         {% csrf_token %}
-        <img
-          class="mb-4"
-          src="{% static 'bootstrap/assets/brand/bootstrap-logo.svg' %}"
-          alt=""
-          width="72"
-          height="57"
-        />
         <h1 class="h3 mb-3 fw-normal">Por favor, acesse sua conta</h1>
         <div class="form-floating">
           <input

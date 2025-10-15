@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-12 col-md-8 col-lg-6">
+      <div class="card shadow border-0">
+        
+
+        <!-- Header -->
+        <div class="card-header bg-primary text-white py-3">
+          <div class="d-flex justify-content-between align-items-center">
+            <a href="{% url 'list_students' %}" class="btn btn-primary btn-sm">
+              <i class="bi bi-arrow-left-circle text-light fs-5"></i>
+            </a>
+            <h4 class="mb-0 text-white text-center flex-grow-1">
+              <i class="bi bi-person-circle me-2"></i>Detalhes do Aluno
+            </h4>
+            <div style="width:2rem;"></div> <!-- spacer for symmetry -->
+          </div>
+        </div>
+        <!-- Body -->
+        <div class="card-body bg-light p-4">
+          <div class="mb-3 text-center">
+            <h5 class="fw-bold mb-2 text-primary">{{ student.name }}</h5>
+            <span class="badge text-secondary">{{ student.uuid }}</span>
+          </div>
+
+          <ul class="list-group list-group-flush mb-4">
+            <li class="list-group-item">
+              <i class="bi bi-telephone-fill me-2 text-success"></i>
+              <strong>Telefone:</strong> {{ student.phone }}
+            </li>
+            {% if student.reference %}
+            <li class="list-group-item">
+              <i class="bi bi-bookmark-fill me-2 text-info"></i>
+              <strong>Referência:</strong> {{ student.reference }}
+            </li>
+            {% endif %}
+          </ul>
+
+          <div class="text-center">
+            <a href="{% url 'add_payment' student.id %}" class="btn btn-success">
+              <i class="bi bi-plus"></i>Adicionar Pagamento
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
