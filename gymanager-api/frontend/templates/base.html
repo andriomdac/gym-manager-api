@@ -1,48 +1,23 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="en" data-bs-theme='dark'>
   <head>
     {% load static %}
-
-  	<title>Sidebar 09</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-    <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900" rel="stylesheet">
-		
-
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <link rel="stylesheet" href="{% static 'bootstrap-5.3.8-dist/css/bootstrap.min.css' %}">
+    <script src="{% static 'bootstrap-5.3.8-dist/js/bootstrap.bundle.min.js' %}"></script>
     <link rel="stylesheet" href="{% static 'icons/font/bootstrap-icons.min.css' %}">
-    <script src="{% static 'dist/js/bootstrap.min.js' %}" integrity="sha384-G/EV+4j2dNv+tEPo3++6LCgdCROaejBqfUeNjuKAiuXbjrxilcCdDz6ZAVfHWe1Y" crossorigin="anonymous"></script>
-
-
-
   </head>
-<body>
-		
-      {% include 'components/sidebar.html' %}
-        <!-- Page Content  -->
-      <div id="content" class="p-4 p-md-5 pt-5">
-        {% if messages %}
-        <div class="messages mb-4">
-            {% for message in messages %}
-            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-                {{ message }}
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            {% endfor %}
-        </div>
-        {% endif %}
-        <h2 class="mb-4">{% block title %}{% endblock %}</h2>
-        {% block content %}
-        {% endblock %}
-      </div>
-		</div>
-    <script src="{% static 'js/jquery.min.js' %}"></script>
-    <script src="{% static 'js/popper.js' %}"></script>
-    <script src="{% static 'js/bootstrap.min.js' %}"></script>
-    <script src="{% static 'js/main.js' %}"></script>
+  <body>
+    {% include 'components/navbar.html' %}
+
+
+    <div class="container mt-3">
+
+      {% block content %}
+      {% endblock %}
+      
+    </div>
   </body>
 </html>
