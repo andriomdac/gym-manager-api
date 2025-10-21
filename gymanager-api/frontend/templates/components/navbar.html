@@ -7,19 +7,19 @@
     <div class="collapse navbar-collapse" id="navbarNavDropdown">
       <ul class="navbar-nav">
         <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="#">Painel</a>
+          <a class="nav-link active" aria-current="page" href="{% url 'homepage' %}">Painel</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="{% url 'add_student' %}">Matricular</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Alunos</a>
+          <a class="nav-link" href="{% url 'list_students' %}">Alunos</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="#">Status</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Caixa</a>
+          <a class="nav-link" href="{% url 'list_registers' %}">Caixa</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="{% url 'logout' %}">Logout</a>

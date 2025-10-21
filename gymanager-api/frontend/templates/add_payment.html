@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+
+
+{% block content %}
+
+
+<h1>Adicionar Pagamento</h1>
+
+
+<form method="post">
+  {% csrf_token %}
+  <label>Pacote de Pagamento</label>
+  <select class="form-select" name="package">
+    <option selected>{{null}}</option>
+    {% for package in packages %}
+    <option value="{{package.id}}">{{package.name}} - {{package.duration_days}} dias</option>
+    {% endfor %}
+  </select>
+
+  <label>Caixa</label>
+  <select class="form-select" name="cash_register">
+    <option selected>{{null}}</option>
+    {% for register in open_registers %}
+      <option value="{{register.id}}">{{register.register_date}}</option>
+    {% endfor %}
+  </select>
+  <button type="submit" class="btn btn-success"> Confirmar</button>
+
+</form>
+
+
+{% endblock %}

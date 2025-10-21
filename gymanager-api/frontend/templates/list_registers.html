@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+
+
+<a href="{% url 'open_register' %}" class="btn btn-light">Abrir novo caixa</a>
+
+
+  {% for register in registers %}
+    <a href="#">
+      <div class="card">
+          <div class="card-body">
+              <h5 class="card-title">{{register.register_date}}</h>
+              <h6 class="card-subtitle mb-2 text-muted">{{register.amount}}</h6>
+              <p class="card-text">{{register.is_opened}}</p>
+          </div>
+      </div>
+    </a>
+  {% endfor %}
+{% endblock %}

@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+
+
+{% block content %}
+
+<h1>Detalhes do Pagamento</h1>
+
+<h3>Aluno: {{payment_details.student.name}}</h3>
+<h3>Pacote de Pagamento: {{payment_details.payment_package.name}}</h3>
+
+<h3>Valores:
+  {% for value in payment_details.payment_values %}
+    <form method='post'>
+      {% csrf_token %}
+      {{value.method}}-{{value.value}}
+      <button class="btn btn-danger" type="submit" name="delete_value"><i class="bi bi-trash-fill"></i></button>
+    </form>
+  {% endfor %}</h3>
+
+<h3>Pacote expira em: {{payment_details.next_payment_date}}</h3>
+<h3>Observações: {{payment_details.observations}}</h3>
+
+
+
+<form method="post">
+  {% csrf_token %}
+  <label>Método de Pagamento</label>
+  <select class="form-select" name="method">
+    <option selected>{{null}}</option>
+    {% for method in methods %}
+      <option value="{{method.id}}">{{method.name}}</option>
+    {% endfor %}
+  </select>
+
+  <label>Valor recebido</label>
+  <input type="number" step="0.1" name="value">
+
+  <button type="submit" class="btn btn-success"> Confirmar</button>
+</form>
+
+
+{% endblock %}

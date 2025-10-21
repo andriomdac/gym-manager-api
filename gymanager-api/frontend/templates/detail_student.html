@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+
+
+{% block content %}
+
+
+{{student}}
+
+
+<a href="{% url 'add_payment' student.id %}">Adicionar Pagamento</a>
+
+{% endblock %}
