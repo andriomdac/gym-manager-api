@@ -1,21 +1,52 @@
-{% extends 'base.html' %}
+<!DOCTYPE html>
+<html lang="pt-br" data-bs-theme="light">
+  <head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Gyman - Login{% endblock %}</title>
+    <link href="{% static 'bootstrap-5.3.8-dist/css/bootstrap.min.css' %}" rel="stylesheet">
+    <script src="{% static 'bootstrap-5.3.8-dist/js/bootstrap.bundle.min.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'icons/font/bootstrap-icons.min.css' %}">
+  </head>
 
+  <body class="bg-light">
+    <main class="container">
+      <div class="row justify-content-center align-items-center" style="min-height: 100vh;">
+        <div class="col-lg-4 col-md-6">
+          
+          <div class="card border-0 shadow-lg rounded-4 p-4 p-md-5">
+            <div class="card-body">
+              
+              <h2 class="display-6 fw-bold text-primary mb-2 text-center">
+                Gyman
+              </h2>
+              <p class="text-muted text-center mb-5">
+                <i class="bi bi-box-arrow-in-right me-1"></i> Acesse sua conta
+              </p>
 
+              <form method="post" class="d-grid gap-3">
+                {% csrf_token %}
 
-{% block content %}
+                <div class="form-floating mb-3">
+                  <input type="text" name="username" id="username" class="form-control rounded-3" placeholder="Seu usuário" required>
+                  <label for="username"><i class="bi bi-person-fill me-2"></i> Usuário</label>
+                </div>
 
+                <div class="form-floating mb-4">
+                  <input type="password" name="password" id="password" class="form-control rounded-3" placeholder="Sua senha" required>
+                  <label for="password"><i class="bi bi-lock-fill me-2"></i> Senha</label>
+                </div>
 
-<form method='post'>
-  {% csrf_token %}
-  <label for="username">Usuário</label>
-  <input type="text" name="username">
+                <button type="submit" class="btn btn-primary btn-lg fw-bold w-100 rounded-pill mt-3 shadow">
+                  <i class="bi bi-box-arrow-in-right me-2"></i> Entrar
+                </button>
+              </form>
 
-  <label for="password">Senha</label>
-  <input type="password" name="password">
-
-  <button type="submit" class="btn btn-light">Login</button>
-  
-</form>
-
-
-{% endblock %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>

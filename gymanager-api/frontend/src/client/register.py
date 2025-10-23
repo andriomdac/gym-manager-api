@@ -15,6 +15,12 @@ class RegisterAPIClient:
             headers=build_api_headers(request)
         )
 
+    def list_open_registers_only(self, request):
+        return rq.api.get(
+            url = f"{self._base_url}/list-open/",
+            headers=build_api_headers(request)
+        )
+
     def open_register(self, request, register_date=None):
         data = {}
         if register_date:
@@ -23,6 +29,12 @@ class RegisterAPIClient:
             url=f"{self._base_url}/",
             headers=build_api_headers(request),
             json=data
+        )
+
+    def close_register(self, request, register_id):
+        return rq.api.post(
+            url=f"{self._base_url}/{register_id}/close/",
+            headers=build_api_headers(request)
         )
     
     def detail_register(self, request, register_id):

@@ -1,33 +1,50 @@
 {% extends 'base.html' %}
 
-
-
 {% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-5 col-md-8"> 
+            <div class="card border-0 shadow-lg rounded-4 p-4 p-md-5">
+                <div class="card-body">
+                    <h2 class="display-6 fw-bold text-primary mb-4 text-center">
+                        <i class="bi bi-cash-stack me-2"></i> Adicionar Pagamento
+                    </h2>
+                    <p class="text-muted text-center mb-5">Selecione o pacote e o caixa para registrar o pagamento.</p>
 
+                    <form method="post" novalidate>
+                        {% csrf_token %}
 
-<h1>Adicionar Pagamento</h1>
+                        <div class="form-floating mb-3">
+                            <select id="package" name="package" class="form-select rounded-3" required aria-label="Selecione um pacote">
+                                <option selected disabled>Selecione um pacote...</option>
+                                {% for package in packages %}
+                                <option value="{{ package.id }}">{{ package.name }} — {{ package.duration_days }} dias</option>
+                                {% endfor %}
+                            </select>
+                            <label for="package"><i class="bi bi-gift-fill me-2"></i> Pacote de Pagamento</label>
+                        </div>
 
+                        <div class="form-floating mb-4">
+                            <select id="cash_register" name="cash_register" class="form-select rounded-3" required aria-label="Selecione o caixa">
+                                <option value="" selected disabled>Selecione um caixa aberto...</option>
+                                <option value="" selected>Caixa do dia: Hoje</option>
+                                {% for register in open_registers %}
+                                <option value="{{ register.id }}">{{ register.register_date }}</option>
+                                {% endfor %}
+                            </select>
+                            <label for="cash_register"><i class="bi bi-safe-fill me-2"></i> Caixa de Registro</label>
+                        </div>
 
-<form method="post">
-  {% csrf_token %}
-  <label>Pacote de Pagamento</label>
-  <select class="form-select" name="package">
-    <option selected>{{null}}</option>
-    {% for package in packages %}
-    <option value="{{package.id}}">{{package.name}} - {{package.duration_days}} dias</option>
-    {% endfor %}
-  </select>
-
-  <label>Caixa</label>
-  <select class="form-select" name="cash_register">
-    <option selected>{{null}}</option>
-    {% for register in open_registers %}
-      <option value="{{register.id}}">{{register.register_date}}</option>
-    {% endfor %}
-  </select>
-  <button type="submit" class="btn btn-success"> Confirmar</button>
-
-</form>
-
-
+                        <div class="d-grid mt-4">
+                            <button type="submit" class="btn btn-primary btn-lg fw-bold rounded-3">
+                                <i class="bi bi-check-circle-fill me-2"></i> Confirmar Pagamento
+                            </button>
+                        </div>
+                        
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

@@ -1,20 +1,45 @@
 {% extends 'base.html' %}
 
-
-
 {% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-5 col-md-8"> 
+            <div class="card border-0 shadow-lg rounded-4 p-4 p-md-5">
+                <div class="card-body">
+                    
+                    <h2 class="display-6 fw-bold text-primary mb-4 text-center">
+                        <i class="bi bi-safe-fill me-2"></i> Abrir Novo Caixa
+                    </h2>
+                    <p class="text-muted text-center mb-5">Escolha a data para iniciar o registro de pagamentos.</p>
 
+                    <form method="post" class="d-grid gap-3" novalidate>
+                        {% csrf_token %}
 
-<h1>Abrir Caixa</h1>
+                        <button type="submit" name="today" class="btn btn-primary btn-lg fw-bold rounded-pill mb-4">
+                            <i class="bi bi-calendar-check-fill me-2"></i> Abrir Caixa para HOJE
+                        </button>
 
-<form method='post'>
-  {% csrf_token %} 
-  <button type="submit" name="today">Hoje</button>
-  
-  <p>Outra data: </p>
-  <input type="date" name="date">
-  <button type="submit">Abrir caixa</button>
-</form>
+                        <hr class="text-muted my-1">
+                        <p class="text-center text-muted small my-3">Ou selecione uma data no passado/futuro:</p>
 
+                        <div class="form-floating mb-4">
+                            <input type="date" name="date" id="date" class="form-control rounded-3" placeholder="Selecione a Data" required>
+                            <label for="date"><i class="bi bi-calendar3 me-2"></i> Selecionar Outra Data</label>
+                        </div>
 
+                        <button type="submit" class="btn btn-success btn-lg fw-bold rounded-3">
+                            <i class="bi bi-check-circle-fill me-2"></i> Abrir Caixa
+                        </button>
+                    </form>
+                    
+                    <div class="d-grid mt-3">
+                         <a href="{% url 'list_registers' %}" class="btn btn-link text-secondary fw-semibold">
+                            <i class="bi bi-arrow-left me-1"></i> Cancelar e Voltar
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+
+            <div class="text-center mb-5">
+                <h2 class="display-6 fw-bold text-dark mb-2">
+                    <i class="bi bi-safe-fill me-2 text-primary"></i> Detalhes do Caixa
+                </h2>
+                <a href="{% url 'list_registers' %}" class="btn btn-link text-secondary fw-semibold">
+                    <i class="bi bi-arrow-left me-1"></i> Voltar à Lista de Caixas
+                </a>
+            </div>
+
+            <div class="card border-0 shadow-lg rounded-4 mb-5 p-4 bg-light">
+                <div class="card-body">
+                    
+                    <h3 class="fw-bold text-primary mb-3 text-center">
+                        Caixa do Dia: {{ register.register_date }}
+                    </h3>
+
+                    <hr class="my-4">
+                    
+                    <div class="row text-center">
+                        <div class="col-md-6 mb-3">
+                            <p class="mb-1 text-dark fw-semibold"><i class="bi bi-currency-dollar me-2 text-success"></i> Quantia Total</p>
+                            <span class="fw-bolder text-success display-5">R$ {{ register.amount }}</span>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <p class="mb-1 text-dark fw-semibold"><i class="bi bi-info-circle-fill me-2 text-secondary"></i> Status</p>
+                            {% if register.is_opened %}
+                                <span class="badge bg-success-subtle text-success-emphasis fw-bold fs-5 p-3 rounded-pill">
+                                    <i class="bi bi-unlock-fill me-1"></i> Aberto
+                                </span>
+                            {% else %}
+                                <span class="badge bg-danger-subtle text-danger-emphasis fw-bold fs-5 p-3 rounded-pill">
+                                    <i class="bi bi-lock-fill me-1"></i> Fechado
+                                </span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h3 class="h4 fw-bold mb-4 text-dark text-center">
+                <i class="bi bi-journal-check me-2 text-primary"></i> Pagamentos Registrados
+            </h3>
+
+            <div class="list-group">
+                {% for payment in register.payments %}
+                <div class="list-group-item border-0 shadow-sm rounded-4 mb-3 p-4">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div>
+                            <h5 class="fw-bold text-dark mb-1">
+                                <i class="bi bi-person-circle me-2 text-primary"></i> {{ payment.student.name }}
+                            </h5>
+                            <h6 class="text-muted small mb-0"><i class="bi bi-tag-fill me-1"></i> Pacote: {{ payment.payment_package.name }}</h6>
+                        </div>
+                        <small class="text-secondary"><i class="bi bi-clock-history me-1"></i> {{ payment.created_at }}</small>
+                    </div>
+
+                    <p class="mb-3 border-start border-3 ps-3 text-secondary small">
+                        <span class="fw-semibold">Observações:</span> {{ payment.observations|default:"-" }}
+                    </p>
+
+                    <p class="fw-bold mb-2 text-dark"><i class="bi bi-credit-card-2-back-fill me-2 text-info"></i> Detalhes do Valor</p>
+                    <div class="row row-cols-1 row-cols-sm-2 g-2">
+                        {% for value in payment.payment_values %}
+                        <div class="col">
+                            <div class="bg-white p-3 border rounded-3 d-flex justify-content-between align-items-center">
+                                <span><i class="bi bi-credit-card me-2 text-secondary"></i> {{ value.method }}</span>
+                                <span class="fw-bold text-success fs-5">R$ {{ value.value }}</span>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% empty %}
+                <div class="text-center text-muted py-5 border rounded-4 bg-light">
+                    <i class="bi bi-exclamation-circle me-2 fs-4"></i>
+                    <p class="mt-2 mb-0 fw-semibold">Nenhum pagamento registrado neste caixa.</p>
+                </div>
+                {% endfor %}
+            </div>
+
+            {% if register.is_opened %}
+            <div class="d-grid mt-5">
+                <a href="{% url 'close_register' register.id %}" class="btn btn-warning btn-lg fw-bold text-dark shadow rounded-pill">
+                    <i class="bi bi-lock-fill me-2"></i> Fechar Caixa
+                </a>
+            </div>
+            {% endif %}
+
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,8 +1,6 @@
 from frontend.src.client._base import BASE_URL
 from frontend.utils.http import build_api_headers
 import requests as rq
-from icecream import ic
-
 
 
 class StudentAPIClient:
@@ -40,15 +38,3 @@ class StudentAPIClient:
             headers=build_api_headers(request)
         )
 
-    def add_payment(
-        self,
-        request,
-        payment_package,
-        student_id
-    ):
-        data = {"payment_package": payment_package}
-        return rq.api.post(
-            url=f"{self._base_url}/{student_id}/payments/",
-            json=data,
-            headers=build_api_headers(request)
-        )

@@ -1,21 +1,62 @@
 {% extends 'base.html' %}
 
-
 {% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
 
+            <h2 class="display-6 fw-bold text-primary mb-5 text-center">
+                Histórico de Caixas
+            </h2>
 
-<a href="{% url 'open_register' %}" class="btn btn-light">Abrir novo caixa</a>
+            <div class="text-center mb-5">
+                <a href="{% url 'open_register' %}" class="btn btn-primary btn-lg fw-bold shadow rounded-pill px-5">
+                    <i class="bi bi-plus-circle-fill me-2"></i> Abrir Novo Caixa
+                </a>
+            </div>
 
+            <div class="list-group">
+                {% for register in registers %}
+                <a href="{% url 'detail_register' register.id %}" class="list-group-item list-group-item-action border-0 shadow-sm mb-3 rounded-4 p-4 text-decoration-none transition-shadow">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="d-flex align-items-center">
+                            <i class="bi bi-safe-fill text-primary display-6 me-4"></i> 
+                            <div>
+                                <h5 class="fw-bold text-dark mb-1">
+                                    <i class="bi bi-calendar-check me-2 text-secondary"></i> {{ register.register_date }}
+                                </h5>
+                                
+                                <h6 class="text-success fw-bold fs-5 mb-2">
+                                    <i class="bi bi-currency-dollar me-2"></i> R$ {{ register.amount }}
+                                </h6>
+                                
+                                {% if register.is_opened %}
+                                <span class="badge bg-success-subtle text-success-emphasis rounded-pill p-2">
+                                    <i class="bi bi-unlock-fill me-1"></i> Aberto
+                                </span>
+                                {% else %}
+                                <span class="badge bg-danger-subtle text-danger-emphasis rounded-pill p-2">
+                                    <i class="bi bi-lock-fill me-1"></i> Fechado
+                                </span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <span class="text-primary fs-4">
+                            <i class="bi bi-chevron-right"></i>
+                        </span>
+                    </div>
+                </a>
+                {% empty %}
+                <div class="text-center text-muted py-5 border rounded-4 bg-light">
+                    <i class="bi bi-exclamation-circle me-2 fs-4"></i>
+                    <p class="mt-2 mb-0 fw-semibold">Nenhum caixa encontrado.</p>
+                    <p class="small">Use o botão "Abrir Novo Caixa" para começar.</p>
+                </div>
+                {% endfor %}
+            </div>
 
-  {% for register in registers %}
-    <a href="#">
-      <div class="card">
-          <div class="card-body">
-              <h5 class="card-title">{{register.register_date}}</h>
-              <h6 class="card-subtitle mb-2 text-muted">{{register.amount}}</h6>
-              <p class="card-text">{{register.is_opened}}</p>
-          </div>
-      </div>
-    </a>
-  {% endfor %}
+        </div>
+    </div>
+</div>
 {% endblock %}

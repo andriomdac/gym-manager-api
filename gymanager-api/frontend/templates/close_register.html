@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6 col-md-8"> 
+            
+            <div class="card border-0 shadow-lg rounded-4 p-4 p-md-5 bg-warning-subtle">
+                <div class="card-body text-center">
+                    
+                    <h2 class="display-5 fw-bold text-danger mb-4">
+                        <i class="bi bi-exclamation-octagon-fill me-2"></i> Atenção!
+                    </h2>
+                    
+                    <h3 class="fw-bold text-dark mb-4">
+                        Confirma o fechamento do Caixa?
+                    </h3>
+                    
+                    <p class="text-danger-emphasis mb-4 fw-semibold">
+                        Após o fechamento, não será mais possível adicionar ou alterar nenhum registro neste caixa.
+                    </p>
+                    
+                    <p class="text-muted small mb-5">
+                        Verifique se todos os pagamentos foram corretamente registrados **antes** de continuar.
+                    </p>
+
+                    <div class="d-grid gap-3">
+                        
+                        <form method="post">
+                            {% csrf_token %}
+                            <button type="submit" name="close_register" class="btn btn-danger btn-lg fw-bold w-100 shadow rounded-pill">
+                                <i class="bi bi-lock-fill me-2"></i> SIM, desejo FECHAR o Caixa
+                            </button>
+                        </form>
+                        
+                        <hr class="text-muted my-2">
+
+                        <a href="{% url 'detail_register' register_id %}" class="btn btn-primary btn-lg fw-bold w-100 shadow-sm rounded-pill">
+                            <i class="bi bi-eye-fill me-2"></i> Verificar Pagamentos
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
