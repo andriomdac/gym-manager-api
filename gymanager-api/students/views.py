@@ -10,8 +10,9 @@ from .serializers import StudentSerializer, StudentStatusSerializer
 from app.utils.exceptions import CustomValidatorException
 from .validators import validate_student_serializer
 from app.utils.paginator import paginate_serializer
-from rest_framework.pagination import PageNumberPagination
+from app.utils.paginator import CustomPagination
 from app.utils.permissions import AllowRoles
+from icecream import ic
 
 
 class StudentListCreateAPIView(APIView):
@@ -25,9 +26,13 @@ class StudentListCreateAPIView(APIView):
         ) -> Response:
         gym_id = request.user.profile.gym.id
         gym = get_object_or_404(Gym, id=gym_id)
-        students = Student.objects.filter(gym=gym).order_by("name")
-        
-        paginator = PageNumberPagination()
+
+        if "search" in request.GET:
+            students = Student.objects.filter(gym=gym, name__icontains=request.GET["search"]).order_by("name")
+        else:
+            students = Student.objects.filter(gym=gym).order_by("name")
+
+        paginator = CustomPagination()
         serializer = paginate_serializer(
             queryset=students,
             request=request,
@@ -93,8 +98,8 @@ class StudentRetrieveUpdateDestroyAPIView(APIView):
             data = request.data
             serializer = StudentSerializer(instance=student, data=data)
 
+            serializer = validate_student_serializer(serializer, gym_id=gym_id)
             if serializer.is_valid():
-                serializer = validate_student_serializer(serializer)
                 serializer.save()
                 return Response(serializer.data, status=status.HTTP_200_OK)
             else:

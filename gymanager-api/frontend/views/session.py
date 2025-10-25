@@ -18,6 +18,7 @@ def login(request):
 
             request.session["access"] = access_token
             request.session["refresh"] = refresh_token
+            request.session["user"] = username
 
             return redirect("homepage")
         

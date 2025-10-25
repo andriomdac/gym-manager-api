@@ -26,9 +26,9 @@ class StudentAPIClient:
             headers=build_api_headers(request=request)
         )
 
-    def list_students_paginated(self, request, page: int):
+    def list_students_paginated(self, request, page: int, search: str):
         return rq.api.get(
-            url=f"{self._base_url}/?page={page}",
+            url=f"{self._base_url}/?page={page}&search={search}",
             headers=build_api_headers(request=request)
         )
     

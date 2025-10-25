@@ -22,6 +22,7 @@ class PaymentDetailSerializer(PaymentSerializer):
     def get_payment_values(self, obj):
         return [
             {
+                "id": value.id,
                 "method": value.payment_method.name,
                 "value": value.value
             }

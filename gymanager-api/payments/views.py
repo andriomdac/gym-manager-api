@@ -36,7 +36,7 @@ class PaymentsListCreateAPIView(APIView):
         serializer = paginate_serializer(
             queryset=student_payments,
             request=request,
-            serializer=PaymentSerializer,
+            serializer=PaymentDetailSerializer,
             paginator=paginator
         )
         
@@ -52,7 +52,7 @@ class PaymentsListCreateAPIView(APIView):
             serializer = PaymentSerializer(data=request.data)
             serializer = build_payment_serializer(
                 serializer=serializer,
-                student_id=student_id
+                student_id=student_id,
             )
             if serializer.is_valid():
                 validate_payment_serializer(serializer=serializer, student_id=student_id)

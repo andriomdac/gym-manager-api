@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import CashRegisterListCreate, CashRegisterClose, CashRegisterDetail
+from .views import CashRegisterListCreate, CashRegisterClose, CashRegisterDetail, CashRegisterListOpenRegistersOnly
 
 
 urlpatterns = [
@@ -7,6 +7,11 @@ urlpatterns = [
         "",
         CashRegisterListCreate.as_view(),
         name="cash_register_list_create"
+    ),
+    path(
+        "list-open/",
+        CashRegisterListOpenRegistersOnly.as_view(),
+        name="cash_register_list_open_registers_only"
     ),
     path(
         "<int:register_id>/",

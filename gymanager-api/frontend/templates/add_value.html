@@ -96,9 +96,11 @@
                             <button type="submit" class="btn btn-info btn-lg fw-bold rounded-pill text-white">
                                 <i class="bi bi-plus-lg me-2"></i> Adicionar Valor
                             </button>
-                            <button type="submit" name="finish_payment" class="btn btn-success btn-lg fw-bold rounded-pill">
-                                <i class="bi bi-check-all me-2"></i> Finalizar Pagamento
-                            </button>
+                            {% if payment_details.payment_values %}
+                              <button type="submit" name="finish_payment" class="btn btn-success btn-lg fw-bold rounded-pill">
+                                  <i class="bi bi-check-all me-2"></i> Finalizar Pagamento
+                              </button>
+                            {% endif %}
                         </div>
                     </form>
                 </div>

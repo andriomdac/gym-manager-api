@@ -18,9 +18,12 @@ def list_students(request):
 
     context = {}
     client = StudentAPIClient()
+    search = request.GET.get("search", "")
+
     response = client.list_students_paginated(
         request=request,
-        page=get_list_current_page(request)
+        page=get_list_current_page(request),
+        search=search
     )
 
     if response.status_code == 200:

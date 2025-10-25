@@ -10,7 +10,7 @@
                 <span class="input-group-text bg-white border-0 ps-4 rounded-start-pill">
                     <i class="bi bi-search text-secondary"></i>
                 </span>
-                <input type="search" name="q" class="form-control border-0 py-3" placeholder="Buscar aluno por nome ou referência..." aria-label="Buscar" value="{{ request.GET.q|default:'' }}">
+                <input type="search" name="search" class="form-control border-0 py-3" placeholder="Buscar aluno por nome ou referência..." aria-label="Buscar" value="{{ request.GET.q|default:'' }}">
                 <button class="btn btn-primary fw-semibold rounded-end-pill px-4" type="submit">
                     <i class="bi bi-funnel-fill me-1"></i> Pesquisar
                 </button>

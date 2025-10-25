@@ -1,3 +1,4 @@
+from icecream import ic
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.request import Request
@@ -9,6 +10,28 @@ from app.utils.paginator import paginate_serializer
 from rest_framework.pagination import PageNumberPagination
 from .utils import build_cash_resgister_serializer
 from app.utils.permissions import AllowRoles
+
+
+
+class CashRegisterListOpenRegistersOnly(APIView):
+    def get_permissions(self):
+        return [AllowRoles(["manager"])]
+
+    def get(
+        self,
+        request: Request,
+    ) -> Response:
+        gym_id = request.user.profile.gym.id
+        registers = CashRegister.objects.filter(gym=gym_id, is_opened=True).order_by("-register_date")
+        paginator = PageNumberPagination()
+        serializer = paginate_serializer(
+            queryset=registers,
+            request=request,
+            serializer=CashRegisterSerializer,
+            paginator=paginator,
+        )
+        return paginator.get_paginated_response(serializer.data)
+
 
 
 class CashRegisterListCreate(APIView):
@@ -51,7 +74,7 @@ class CashRegisterClose(APIView):
     def get_permissions(self):
         return [AllowRoles(["manager"])]
 
-    def post(self, request: Request, gym_id: str, register_id: str) -> Response:
+    def post(self, request: Request, register_id: str) -> Response:
         register = get_object_or_404(CashRegister, id=register_id)
         serializer = CashRegisterSerializer(instance=register)
 

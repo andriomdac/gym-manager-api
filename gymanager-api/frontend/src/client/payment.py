@@ -58,6 +58,12 @@ class PaymentAPIClient:
             headers=build_api_headers(request)
         )
 
+    def delete_payment(self, request, payment_id):
+        return rq.api.delete(
+            url=f"{self._base_url}/{payment_id}/",
+            headers=build_api_headers(request)
+        )
+
 
 class PaymentPackageAPIClient:
 
