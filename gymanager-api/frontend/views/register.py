@@ -1,7 +1,13 @@
 from django.contrib import messages
 from django.shortcuts import render, redirect
+from django.template import context
+from icecream import ic
+from frontend.src.client import payment
+from frontend.src.client.payment import PaymentAPIClient
+from frontend.src.client.payment import PaymentAPIClient
 from frontend.utils.decorators import validate_session
 from frontend.src.client.register import RegisterAPIClient
+from frontend.src.client.student import StudentAPIClient
 
 
 @validate_session
@@ -21,6 +27,25 @@ def list_registers(request):
         context=context
     )
 
+@validate_session
+def redo_payment(request, register_id, student_id, payment_id):
+    context = {}
+    context["register_id"] = register_id
+    if request.method == "POST":
+        if "confirm_redo" in request.POST:
+            delete_payment = PaymentAPIClient(student_id).delete_payment(request, payment_id)
+            if delete_payment.status_code == 204:
+                messages.success(request, "Pagamento antigo deletado. Realize o registro desse pagamento novamente.")
+                return redirect("add_payment", student_id=student_id)
+            else:
+                messages.error(request, f"{delete_payment.json()}")
+                return redirect("detail_register", register_id)
+    return render(
+        request=request,
+        template_name="redo_payment.html",
+    )
+    
+
 
 @validate_session
 def detail_register(request, register_id):
@@ -30,10 +55,14 @@ def detail_register(request, register_id):
         request=request,
         register_id=register_id
     )
-
     if res.status_code == 200:
         context["register"] = res.json()
 
+    if request.method == "POST":
+        if request.POST["action"] == "redo_payment":
+            student_id = request.POST["student_id"]
+            payment_id = request.POST["payment_id"]
+            return redirect("redo_payment", register_id=register_id, student_id=student_id, payment_id=payment_id)
     return render(
         request=request,
         template_name="detail_register.html",

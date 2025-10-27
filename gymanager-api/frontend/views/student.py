@@ -1,6 +1,4 @@
 from django.shortcuts import redirect, render
-from django.utils.http import content_disposition_header
-from icecream import ic
 from frontend.utils.decorators import validate_session
 from django.contrib import messages
 from frontend.src.client.student import StudentAPIClient
@@ -89,6 +87,7 @@ def add_payment(request, student_id):
     context = {}
     packages = PaymentPackageAPIClient().list_packages(request=request)
     cash_register_list_open = RegisterAPIClient().list_open_registers_only(request)
+    student = StudentAPIClient().detail_student(request, student_id)
     
     if request.method == "POST":
         package_id = None
@@ -117,6 +116,8 @@ def add_payment(request, student_id):
         context["packages"] = packages.json()["results"]
     if cash_register_list_open.status_code == 200:
         context["open_registers"] = cash_register_list_open.json()["results"]
+    if student.status_code == 200:
+        context["student"] = student.json()
         
     return render(
         request=request,
