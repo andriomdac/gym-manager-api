@@ -95,9 +95,16 @@
                     
                     {% if register.is_opened %}
                     <div class="d-flex justify-content-end pt-3 border-top">
-                        <a href="#" class="btn btn-sm btn-outline-warning text-dark fw-semibold rounded-pill px-3">
+                      <form method='post'>
+                        {% csrf_token %}
+
+
+                        <input type="hidden" name="payment_id" value="{{payment.id}}">
+                        <input type="hidden" name="student_id" value="{{payment.student.id}}">
+                        <button type='submit' name="action" value="redo_payment" class="btn btn-sm btn-outline-warning text-dark fw-semibold rounded-pill px-3">
                             <i class="bi bi-arrow-counterclockwise me-1"></i> Refazer Registro
-                        </a>
+                        </button>
+                      </form>
                     </div>
                     {% endif %}
 

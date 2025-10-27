@@ -3,46 +3,104 @@
 {% block content %}
 <div class="container py-5">
     <div class="row justify-content-center">
-        <div class="col-lg-5 col-md-8"> 
-            <div class="card border-0 shadow-lg rounded-4 p-4 p-md-5">
-                <div class="card-body">
-                    <h2 class="display-6 fw-bold text-primary mb-4 text-center">
-                        <i class="bi bi-cash-stack me-2"></i> Adicionar Pagamento
-                    </h2>
-                    <p class="text-muted text-center mb-5">Selecione o pacote e o caixa para registrar o pagamento.</p>
+        <div class="col-lg-10 text-center mb-5">
+            <h2 class="display-6 fw-bold text-dark mb-2">
+                <i class="bi bi-cash-stack me-2 text-primary"></i> Registrar Novo Pagamento
+            </h2>
+            <p class="text-muted mb-0">Selecione o pacote, o caixa (opcional) e adicione observações (opcional).</p>
+        </div>
 
-                    <form method="post" novalidate>
-                        {% csrf_token %}
-
-                        <div class="form-floating mb-3">
-                            <select id="package" name="package" class="form-select rounded-3" required aria-label="Selecione um pacote">
-                                <option selected disabled>Selecione um pacote...</option>
-                                {% for package in packages %}
-                                <option value="{{ package.id }}">{{ package.name }} — {{ package.duration_days }} dias</option>
-                                {% endfor %}
-                            </select>
-                            <label for="package"><i class="bi bi-gift-fill me-2"></i> Pacote de Pagamento</label>
-                        </div>
-
-                        <div class="form-floating mb-4">
-                            <select id="cash_register" name="cash_register" class="form-select rounded-3" required aria-label="Selecione o caixa">
-                                <option value="" selected disabled>Selecione um caixa aberto...</option>
-                                <option value="" selected>Caixa do dia: Hoje</option>
-                                {% for register in open_registers %}
-                                <option value="{{ register.id }}">{{ register.register_date }}</option>
-                                {% endfor %}
-                            </select>
-                            <label for="cash_register"><i class="bi bi-safe-fill me-2"></i> Caixa de Registro</label>
-                        </div>
-
-                        <div class="d-grid mt-4">
-                            <button type="submit" class="btn btn-primary btn-lg fw-bold rounded-3">
-                                <i class="bi bi-check-circle-fill me-2"></i> Confirmar Pagamento
-                            </button>
-                        </div>
-                        
-                    </form>
+        <div class="col-lg-10 mb-5">
+            <div class="d-flex justify-content-center align-items-center">
+                <div class="text-center">
+                    <span class="badge bg-primary rounded-circle p-3 mb-2 shadow-sm d-block mx-auto" style="width: 40px; height: 40px;">
+                        <i class="bi bi-1-circle-fill fs-5"></i>
+                    </span>
+                    <small class="fw-bold text-primary d-block">1. Pacote</small>
                 </div>
+
+                <div class="border-top mx-3" style="width: 150px; border-color: #dee2e6 !important;"></div>
+
+                <div class="text-center">
+                    <span class="badge bg-light text-secondary border rounded-circle p-3 mb-2 d-block mx-auto" style="width: 40px; height: 40px;">
+                        <i class="bi bi-2-circle fs-5"></i>
+                    </span>
+                    <small class="text-muted d-block">2. Valor</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-10">
+            <div class="row justify-content-center g-4">
+                
+                <div class="col-lg-4">
+                    <div class="card border-0 shadow-lg rounded-4 p-4 h-100 bg-light">
+                        <div class="card-body">
+                            <h3 class="h4 text-primary fw-bold mb-4 border-bottom pb-2">
+                                <i class="bi bi-person-vcard me-2"></i> Informações do Aluno
+                            </h3>
+                            
+                            <div class="mb-3">
+                                <p class="mb-0 text-dark fw-semibold small"><i class="bi bi-person-fill me-2 text-secondary"></i> Nome do Aluno</p>
+                                <span class="fw-bolder fs-4 text-dark">{{ student.name }}</span>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <p class="mb-0 text-dark fw-semibold small"><i class="bi bi-hash me-2 text-secondary"></i> ID de Matrícula</p>
+                                <span class="fw-bold text-muted">{{ student.id }}</span>
+                            </div>
+                            
+                            <hr class="my-4">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="card border-0 shadow-lg rounded-4 p-4 h-100">
+                        <div class="card-body">
+                            <h3 class="h4 text-center fw-bold text-primary mb-4 border-bottom pb-2">
+                                <i class="bi bi-input-cursor-text me-2"></i> Selecionar Opções
+                            </h3>
+
+                            <form method="post" novalidate>
+                                {% csrf_token %}
+
+                                <div class="form-floating mb-3">
+                                    <select id="package" name="package" class="form-select rounded-3" required aria-label="Selecione um pacote">
+                                        <option selected disabled>Selecione um pacote...</option>
+                                        {% for package in packages %}
+                                        <option value="{{ package.id }}">{{ package.name }} — {{ package.duration_days }} dias</option>
+                                        {% endfor %}
+                                    </select>
+                                    <label for="package"><i class="bi bi-gift-fill me-2"></i> Pacote de Pagamento</label>
+                                </div>
+
+                                <div class="form-floating mb-4">
+                                    <select id="cash_register" name="cash_register" class="form-select rounded-3" required aria-label="Selecione o caixa">
+                                        <option value="" selected disabled>Selecione um caixa aberto...</option>
+                                        <option value="" selected>Caixa do dia: Hoje</option>
+                                        {% for register in open_registers %}
+                                        <option value="{{ register.id }}">{{ register.register_date }}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <label for="cash_register"><i class="bi bi-safe-fill me-2"></i> Caixa de Registro</label>
+                                </div>
+                                
+                                <div class="form-floating mb-4">
+                                    <textarea id="observations" name="observations" class="form-control rounded-3" placeholder="Observações (opcional)" style="height: 100px"></textarea>
+                                    <label for="observations"><i class="bi bi-chat-left-text-fill me-2"></i> Observações (opcional)</label>
+                                </div>
+                                
+                                <div class="d-grid mt-4">
+                                    <button type="submit" class="btn btn-primary btn-lg fw-bold rounded-pill shadow">
+                                        <i class="bi bi-check-circle-fill me-2"></i> Continuar para o Valor
+                                    </button>
+                                </div>
+                                
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>

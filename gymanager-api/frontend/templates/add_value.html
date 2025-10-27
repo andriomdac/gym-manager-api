@@ -3,110 +3,143 @@
 {% block content %}
 <div class="container py-5">
     <div class="row justify-content-center">
-        <div class="col-lg-8">
-
-            <div class="text-center mb-5">
-                <h2 class="display-6 fw-bold text-dark mb-2">
-                    <i class="bi bi-receipt-cutoff me-2 text-primary"></i> Detalhes do Pagamento
-                </h2>
-            </div>
-
-            <div class="card border-0 shadow-lg rounded-4 mb-5 p-3 bg-light">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-start mb-3">
-                        <div>
-                            <h4 class="fw-bold text-dark mb-1">
-                                <i class="bi bi-person-badge-fill me-2 text-primary"></i> {{ payment_details.student.name }}
-                            </h4>
-                            <p class="text-muted small mb-0">ID do Pagamento: {{ payment_details.id }}</p>
-                        </div>
-                        <span class="badge bg-danger-subtle text-danger-emphasis fw-semibold p-2 rounded-pill">
-                            <i class="bi bi-calendar-x me-1"></i> Expira em {{ payment_details.next_payment_date }}
-                        </span>
-                    </div>
-
-                    <hr class="my-3">
-                    
-                    <div class="row g-2">
-                        <div class="col-sm-6">
-                            <p class="mb-0 text-dark fw-semibold"><i class="bi bi-tag-fill me-2 text-secondary"></i> Pacote</p>
-                            <span class="text-primary fw-bold fs-5">{{ payment_details.payment_package.name }}</span>
-                        </div>
-                        <div class="col-sm-6">
-                            <p class="mb-0 text-dark fw-semibold"><i class="bi bi-chat-left-text-fill me-2 text-secondary"></i> Observações</p>
-                            <span class="text-dark">{{ payment_details.observations|default:"Nenhuma." }}</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <h3 class="h4 fw-bold mb-4 text-dark text-center">
-                <i class="bi bi-cash me-2 text-success"></i> Valores Registrados
-            </h3>
-
-            <div class="card border-0 shadow-sm rounded-4 mb-5">
-                <div class="card-body p-4">
-                    {% for value in payment_details.payment_values %}
-                    <form method="post" class="d-flex justify-content-between align-items-center list-group-item border-0 border-bottom bg-white p-2 mb-2">
-                        {% csrf_token %}
-                        <div class="d-flex align-items-center">
-                            <i class="bi bi-credit-card-fill me-3 fs-5 text-secondary"></i>
-                            <span class="fw-semibold text-dark">{{ value.method }}</span>
-                        </div>
-                        <div class="d-flex align-items-center">
-                            <span class="fw-bold text-success fs-5 me-3">R$ {{ value.value }}</span>
-                            <button class="btn btn-outline-danger btn-sm rounded-pill" type="submit" name="delete_value" value="{{ value.id }}" title="Excluir valor">
-                                <i class="bi bi-trash-fill"></i>
-                            </button>
-                        </div>
-                    </form>
-                    {% empty %}
-                    <div class="text-center text-muted py-3">
-                        <i class="bi bi-exclamation-circle me-1"></i> Nenhum valor adicionado.
-                    </div>
-                    {% endfor %}
-                </div>
-            </div>
-
-            <div class="card border-0 shadow-lg rounded-4 p-4">
-                <div class="card-body">
-                    <h3 class="h4 text-center fw-bold text-primary mb-4">
-                        <i class="bi bi-plus-circle-fill me-2"></i> Adicionar Novo Valor
-                    </h3>
-
-                    <form method="post" novalidate>
-                        {% csrf_token %}
-
-                        <div class="form-floating mb-3">
-                            <select id="method" name="method" class="form-select rounded-3" required aria-label="Selecione o método">
-                                <option value="" selected disabled>Selecione o método...</option>
-                                {% for method in methods %}
-                                <option value="{{ method.id }}">{{ method.name }}</option>
-                                {% endfor %}
-                            </select>
-                            <label for="method"><i class="bi bi-wallet-fill me-2"></i> Método de Pagamento</label>
-                        </div>
-
-                        <div class="form-floating mb-4">
-                            <input id="value" type="number" step="0.1" name="value" class="form-control rounded-3" placeholder="Valor" required>
-                            <label for="value"><i class="bi bi-currency-dollar me-2"></i> Valor Recebido (R$)</label>
-                        </div>
-
-                        <div class="d-grid gap-3">
-                            <button type="submit" class="btn btn-info btn-lg fw-bold rounded-pill text-white">
-                                <i class="bi bi-plus-lg me-2"></i> Adicionar Valor
-                            </button>
-                            {% if payment_details.payment_values %}
-                              <button type="submit" name="finish_payment" class="btn btn-success btn-lg fw-bold rounded-pill">
-                                  <i class="bi bi-check-all me-2"></i> Finalizar Pagamento
-                              </button>
-                            {% endif %}
-                        </div>
-                    </form>
-                </div>
-            </div>
-
+        <div class="col-lg-10 text-center mb-5">
+            <h2 class="display-6 fw-bold text-dark mb-2">
+                <i class="bi bi-receipt-cutoff me-2 text-primary"></i> Detalhes do Pagamento
+            </h2>
+            <a href="{% url 'list_registers' %}" class="btn btn-link text-secondary fw-semibold">
+                <i class="bi bi-arrow-left me-1"></i> Voltar ao Caixa
+            </a>
         </div>
+        
+        <div class="col-lg-10 mb-5">
+            <div class="d-flex justify-content-center align-items-center">
+                <div class="text-center">
+                    <span class="badge text-secondary rounded-circle p-3 mb-2 shadow-sm d-block mx-auto" style="width: 40px; height: 40px;">
+                        <i class="bi bi-1-circle fs-5"></i>
+                    </span>
+                    <small class="fw-bold text-secondary d-block">1. Pacote</small>
+                </div>
+
+                <div class="border-top mx-3" style="width: 150px; border-color: #dee2e6 !important;"></div>
+
+                <div class="text-center">
+                    <span class="badge bg-primary text-light border rounded-circle p-3 mb-2 d-block mx-auto" style="width: 40px; height: 40px;">
+                        <i class="bi bi-2-circle-fill fs-5"></i>
+                    </span>
+                    <small class="text-primary d-block">2. Valor</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-10">
+            <div class="row g-4">
+                
+                <div class="col-lg-5">
+                    <div class="card border-0 shadow-lg rounded-4 p-3 h-100 bg-light">
+                        <div class="card-body">
+                            <h3 class="h4 text-primary fw-bold mb-4 border-bottom pb-2">
+                                <i class="bi bi-info-circle-fill me-2"></i> Dados do Registro
+                            </h3>
+
+                            <div class="d-flex justify-content-between align-items-start mb-4">
+                                <div>
+                                    <h4 class="fw-bold text-dark mb-1">
+                                        <i class="bi bi-person-badge-fill me-2 text-primary"></i> {{ payment_details.student.name }}
+                                    </h4>
+                                    <p class="text-muted small mb-0">ID do Pagamento: {{ payment_details.id }}</p>
+                                </div>
+                                <span class="badge bg-danger-subtle text-danger-emphasis fw-semibold p-2 rounded-pill">
+                                    <i class="bi bi-calendar-x me-1"></i> Expira em {{ payment_details.next_payment_date }}
+                                </span>
+                            </div>
+
+                            <hr class="my-3">
+                            
+                            <div class="row g-3">
+                                <div class="col-12">
+                                    <p class="mb-0 text-dark fw-semibold small"><i class="bi bi-tag-fill me-2 text-secondary"></i> Pacote</p>
+                                    <span class="text-primary fw-bold fs-5">{{ payment_details.payment_package.name }}</span>
+                                </div>
+                                <div class="col-12 mt-3">
+                                    <p class="mb-0 text-dark fw-semibold small"><i class="bi bi-chat-left-text-fill me-2 text-secondary"></i> Observações</p>
+                                    <p class="text-dark small border-start border-3 ps-2">{{ payment_details.observations|default:"Nenhuma observação registrada." }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-7">
+                    
+                    <div class="card border-0 shadow-lg rounded-4 mb-4">
+                        <div class="card-body p-4">
+                            <h3 class="h5 fw-bold mb-4 text-dark border-bottom pb-2">
+                                <i class="bi bi-cash me-2 text-success"></i> Valores Registrados
+                            </h3>
+                            {% for value in payment_details.payment_values %}
+                            <form method="post" class="d-flex justify-content-between align-items-center list-group-item border-0 border-bottom bg-white p-2 mb-2">
+                                {% csrf_token %}
+                                <div class="d-flex align-items-center">
+                                    <i class="bi bi-credit-card-fill me-3 fs-5 text-secondary"></i>
+                                    <span class="fw-semibold text-dark">{{ value.method }}</span>
+                                </div>
+                                <div class="d-flex align-items-center">
+                                    <span class="fw-bold text-success fs-5 me-3">R$ {{ value.value }}</span>
+                                    <button class="btn btn-link text-danger btn-sm p-0" type="submit" name="delete_value" value="{{ value.id }}" title="Excluir valor">
+                                        <i class="bi bi-trash-fill fs-5"></i>
+                                    </button>
+                                </div>
+                            </form>
+                            {% empty %}
+                            <div class="text-center text-muted py-3">
+                                <i class="bi bi-exclamation-circle me-1"></i> Nenhum valor adicionado.
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    
+                    <div class="card border-0 shadow-lg rounded-4 p-4">
+                        <div class="card-body p-0">
+                            <h3 class="h5 text-center fw-bold text-primary mb-4 border-bottom pb-2">
+                                <i class="bi bi-plus-circle-fill me-2"></i> Adicionar Novo Valor
+                            </h3>
+
+                            <form method="post" novalidate class="d-grid gap-3">
+                                {% csrf_token %}
+
+                                <div class="form-floating">
+                                    <select id="method" name="method" class="form-select rounded-3" required aria-label="Selecione o método">
+                                        <option value="" selected disabled>Selecione o método...</option>
+                                        {% for method in methods %}
+                                        <option value="{{ method.id }}">{{ method.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <label for="method"><i class="bi bi-wallet-fill me-2"></i> Método de Pagamento</label>
+                                </div>
+
+                                <div class="form-floating">
+                                    <input id="value" type="number" step="0.1" name="value" class="form-control rounded-3" placeholder="Valor" required>
+                                    <label for="value"><i class="bi bi-currency-dollar me-2"></i> Valor Recebido (R$)</label>
+                                </div>
+
+                                <div class="d-grid gap-3 pt-3">
+                                    <button type="submit" class="btn btn-info btn-lg fw-bold rounded-pill text-white">
+                                        <i class="bi bi-plus-lg me-2"></i> Adicionar Valor
+                                    </button>
+                                    {% if payment_details.payment_values %}
+                                      <button type="submit" name="finish_payment" class="btn btn-success btn-lg fw-bold rounded-pill">
+                                          <i class="bi bi-check-all me-2"></i> Finalizar Pagamento
+                                      </button>
+                                    {% endif %}
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        
     </div>
 </div>
 {% endblock %}
