@@ -17,11 +17,11 @@ from students.models import Student
 def validate_payment_serializer(serializer: Serializer, student_id: str) -> Serializer:
     data = serializer.validated_data
     cash_register = data["cash_register"]
+    
     if cash_register.payments.filter(student=data["student"]).exists():
         raise CustomValidatorException(
             "Já existe um pagamento deste aluno neste caixa."
         )
-
     if not cash_register.is_opened:
         raise CustomValidatorException("Não é possível adicionar novo pagamento a um caixa fechado.")
 
@@ -47,7 +47,7 @@ def validate_payment_value_serializer(
     data["payment"] = payment_id
     payment = get_object_or_404(Payment, id=payment_id)
     
-    if "payment_method" in data:
+    if data.get("payment_method") and data.get("value"):
         method = get_object_or_404(PaymentMethod, id=data["payment_method"])
         
         if not payment.cash_register.is_opened:
@@ -55,6 +55,8 @@ def validate_payment_value_serializer(
             
         if payment.payment_values.filter(payment_method=data["payment_method"]).exists():
             raise CustomValidatorException(f"O método {method.name} já existe para este pagamento.")
+    else:
+        raise CustomValidatorException("Método de pagamento e/ou Valor Recebido não pode(m) estar vazio(s)")
 
     new_serializer = PaymentValueSerializer(data=data)
     return new_serializer

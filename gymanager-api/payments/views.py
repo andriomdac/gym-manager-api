@@ -7,8 +7,6 @@ from rest_framework.views import APIView
 from app.utils.exceptions import CustomValidatorException
 from students.models import Student
 from .models import Payment, PaymentValue
-from payment_methods.models import PaymentMethod
-from cash_registers.models import CashRegister
 from .serializers import PaymentSerializer, PaymentValueSerializer, PaymentDetailSerializer
 from .validators import validate_payment_deletion, validate_payment_value_serializer, validate_payment_serializer
 from .serializer_builders import build_payment_serializer
@@ -63,7 +61,7 @@ class PaymentsListCreateAPIView(APIView):
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
         except CustomValidatorException as e:
-            return Response({"detail": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"detail": f"{e}"}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class PaymentDetailDeleteAPIView(APIView):

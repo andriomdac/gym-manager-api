@@ -15,6 +15,9 @@ def build_payment_serializer(serializer: Serializer, student_id: str) -> Seriali
     today = timezone.localdate()
     data["student"] = student_id
 
+    if not data.get("payment_package"):
+        raise CustomValidatorException(f"O campo 'Pacote de Pagamento' não pode estar em branco.")
+
     last_payment = student.payments.order_by("next_payment_date").last()
     if last_payment:
         if today < last_payment.next_payment_date:
