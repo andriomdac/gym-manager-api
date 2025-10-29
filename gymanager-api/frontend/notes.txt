@@ -1,0 +1,10 @@
+
+    student_id = request.POST["student_id"]
+    payment_id = request.POST["payment_id"]
+    delete_payment = PaymentAPIClient(student_id).delete_payment(request, payment_id)
+    if delete_payment.status_code == 204:
+        messages.success(request, "Pagamento antigo deletado. Realize o registro desse pagamento novamente.")
+        return redirect("add_payment", student_id=student_id)
+    else:
+        messages.error(request, f"{delete_payment.json()}")
+        return detail_register(request, register_id)

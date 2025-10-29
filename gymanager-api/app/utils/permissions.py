@@ -1,5 +1,4 @@
 from rest_framework.permissions import BasePermission
-from icecream import ic
 
     
 class  AllowRoles(BasePermission):

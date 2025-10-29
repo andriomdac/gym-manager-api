@@ -1,7 +1,7 @@
 from django.urls import path
 
 from frontend.views.student import add_payment, add_value, detail_student, list_students, add_student
-from frontend.views.register import close_register, detail_register, list_registers, open_register
+from frontend.views.register import close_register, detail_register, list_registers, open_register, redo_payment
 from .views.session import (
     login,
     logout,
@@ -26,7 +26,9 @@ urlpatterns = [
     path('cash-registers/', list_registers, name='list_registers'),
     path('open-register/', open_register, name='open_register'),
     path('detail-register/<int:register_id>/', detail_register, name='detail_register'),
+    path('detail-register/<int:register_id>/student/<int:student_id>/payment/<int:payment_id>/', redo_payment, name='redo_payment'),
     path('close-register/<int:register_id>/', close_register, name='close_register'),
+
 
 
 

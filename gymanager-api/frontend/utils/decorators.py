@@ -1,6 +1,7 @@
 from django.shortcuts import redirect
 from frontend.src.client.token import TokenAPIClient
 
+
 def validate_session(func):
     def wrapper(request, *args, **kwargs):
         if "access" in request.session and "refresh" in request.session:

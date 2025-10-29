@@ -21,11 +21,14 @@ class PaymentAPIClient:
         self,
         request,
         payment_package,
-        cash_register
+        cash_register,
+        observations=None
     ):
         data = {
             "payment_package": payment_package,
         }
+        if observations:
+            data["observations"] = observations
         if cash_register:
             data["cash_register"] = cash_register
         return rq.api.post(
