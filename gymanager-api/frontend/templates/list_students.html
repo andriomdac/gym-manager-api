@@ -7,12 +7,9 @@
             <h2 class="display-6 fw-bold text-primary mb-5 text-center">Lista de Alunos</h2>
 
             <form method="get" class="input-group input-group-lg shadow-sm mb-3 border rounded-pill">
-                <span class="input-group-text bg-white border-0 ps-4 rounded-start-pill">
-                    <i class="bi bi-search text-secondary"></i>
-                </span>
-                <input type="search" name="search" class="form-control border-0 py-3" placeholder="Buscar aluno por nome ou referência..." aria-label="Buscar" value="{{ request.GET.q|default:'' }}">
+                <input type="search" name="search" class="form-control py-3" placeholder="Buscar aluno por nome ou referência..." aria-label="Buscar" value="{{ request.GET.q|default:'' }}">
                 <button class="btn btn-primary fw-semibold rounded-end-pill px-4" type="submit">
-                    <i class="bi bi-funnel-fill me-1"></i> Pesquisar
+                    <i class="bi bi-search text-white"></i>
                 </button>
             </form>
             
@@ -23,7 +20,7 @@
                     <ul class="pagination pagination-md shadow-sm mb-0">
                         <li class="page-item {% if not pagination.has_previous_page %}disabled{% endif %}">
                             <button type="submit" name="previous" class="page-link rounded-start-pill border-0 py-2 px-3" {% if not pagination.has_previous_page %}disabled{% endif %}>
-                                <i class="bi bi-arrow-left me-1"></i> Anterior
+                                <i class="bi bi-arrow-left me-1"></i>
                             </button>
                         </li>
                         
@@ -41,7 +38,7 @@
 
                         <li class="page-item {% if not pagination.has_next_page %}disabled{% endif %}">
                             <button type="submit" name="next" class="page-link rounded-end-pill border-0 py-2 px-3" {% if not pagination.has_next_page %}disabled{% endif %}>
-                                Próximo <i class="bi bi-arrow-right ms-1"></i>
+                                <i class="bi bi-arrow-right ms-1"></i>
                             </button>
                         </li>
                     </ul>
@@ -55,7 +52,7 @@
                     <i class="bi bi-grid-fill me-1"></i> Total de Alunos: {{ pagination.total_items }}
                 </span>
                 <span class="text-muted small">
-                    <i class="bi bi-collection-fill me-1"></i> Itens nesta página: {{ students|length }}
+                    <i class="bi bi-collection-fill me-1"></i> Alunos nesta página: {{ students|length }}
                 </span>
             </div>
             {% endif %}
@@ -66,23 +63,42 @@
         <div class="col-lg-8">
             <div class="list-group">
                 {% for student in students %}
-                <a href="{% url 'detail_student' student.id %}" class="list-group-item list-group-item-action border-0 shadow-sm mb-3 rounded-4 p-4 text-decoration-none transition-shadow">
+                
+                {# Aplica borda vermelha e sombra maior se o pagamento estiver vencido #}
+                <a href="{% url 'detail_student' student.id %}" 
+                   class="list-group-item list-group-item-action mb-3 rounded-4 p-4 text-decoration-none transition-shadow 
+                          {% if student.is_overdue %}border border-danger shadow-lg{% else %}border-0 shadow-sm{% endif %}">
                     <div class="d-flex justify-content-between align-items-center">
                         <div class="d-flex align-items-center">
                             <div class="me-4 text-primary fs-3">
                                 <i class="bi bi-person-badge-fill"></i>
                             </div>
                             <div>
-                                <h5 class="mb-1 fw-bold text-dark">{{ student.name }}</h5>
+                                {# Nome do aluno com o badge de status de pagamento #}
+                                <div class="d-flex align-items-center mb-1">
+                                    <h5 class="fw-bold text-dark mb-0 me-2">{{ student.name }}</h5>
+                                    {% if student.is_overdue %}
+                                    <span class="badge bg-danger text-white fw-bold p-2 rounded-pill">
+                                        <i class="bi bi-x-circle-fill me-1"></i> VENCIDO
+                                    </span>
+                                    {% else %}
+                                    <span class="badge bg-success text-white fw-bold p-2 rounded-pill">
+                                        <i class="bi bi-check-circle-fill me-1"></i> EM DIA
+                                    </span>
+                                    {% endif %}
+                                </div>
+                                
                                 <p class="mb-1 text-muted small"><i class="bi bi-telephone-fill me-1"></i> {{ student.phone }}</p>
                                 <p class="mb-0 text-secondary small"><i class="bi bi-tag-fill me-1"></i> {{ student.reference }}</p>
                             </div>
                         </div>
+                        {# Ícone de seta para detalhes #}
                         <span class="text-primary fs-5">
                             <i class="bi bi-chevron-right"></i>
                         </span>
                     </div>
                 </a>
+                
                 {% empty %}
                 <div class="text-center text-muted py-5 border rounded-4 bg-light">
                     <i class="bi bi-exclamation-circle me-2 fs-4"></i>

@@ -62,7 +62,7 @@ for student in students:
     rq.api.post(
         url="http://localhost:8000/api/students/",
         headers={
-                "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzYxMTM5OTEyLCJpYXQiOjE3NjExMzI3MTIsImp0aSI6ImMxNjdjOWI5ZGExNDQ4Yzc5MzRhZjVhNmRlN2E1MWMyIiwidXNlcl9pZCI6IjEiLCJ1c2VyX3Byb2ZpbGVfdXVpZCI6IjU2NGJjNWJmLTE0M2QtNDg1ZC1hYjIyLTFmNTIwOThjMjViMiJ9.TLpDMp_5naAq0H60iqwQOxA3M7w-MdJsaI5jO_xCu9Q",
+                "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzYxNzk4NTI5LCJpYXQiOjE3NjE3OTEzMjksImp0aSI6IjY2ZWE0Y2M3ZmUzNzQ5YTJiY2JhOWMxYjRkZDVkNGZmIiwidXNlcl9pZCI6IjEiLCJ1c2VyX3Byb2ZpbGVfdXVpZCI6IjZlZTVmMmQ0LTQyZmUtNDhiMC05NTBjLWJhN2M2M2E4YjJiYSJ9.ZzXoOWgNf-7wLcgi43fsSQSzCPAvsOGShDfB-cC7Kbo",
                 "Content-Type": "application/json" 
             },
         json={

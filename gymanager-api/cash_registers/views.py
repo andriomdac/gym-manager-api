@@ -1,9 +1,12 @@
+from asyncio import exceptions
 from icecream import ic
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.generics import get_object_or_404
+
+from app.utils.exceptions import CustomValidatorException
 from .serializers import CashRegisterSerializer, CashRegisterDetailSerializer
 from .models import CashRegister
 from app.utils.paginator import paginate_serializer
@@ -57,17 +60,20 @@ class CashRegisterListCreate(APIView):
         self,
         request: Request,
     ) -> Response:
-        gym_id = request.user.profile.gym.id
-        data = request.data
-        serializer = CashRegisterSerializer(data=data)
-        serializer = build_cash_resgister_serializer(
-            serializer_instance=serializer, gym_id=gym_id
-        )
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            gym_id = request.user.profile.gym.id
+            data = request.data
+            serializer = CashRegisterSerializer(data=data)
+            serializer = build_cash_resgister_serializer(
+                serializer_instance=serializer, gym_id=gym_id
+            )
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            else:
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        except CustomValidatorException as e:
+            return Response({"detail": f"{e}"}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class CashRegisterClose(APIView):

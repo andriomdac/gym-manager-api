@@ -30,6 +30,7 @@ class Payment(models.Model):
         related_name="payments"
     )
     observations = models.CharField(max_length=255, blank=True, null=True)
+    receiver = models.CharField(max_length=20, blank=True, null=True)
 
     def __str__(self):
         return f"{self.payment_date}"

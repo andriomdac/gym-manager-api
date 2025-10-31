@@ -3,10 +3,10 @@
 {% block content %}
 <div class="container py-5">
     <div class="row justify-content-center">
-        <div class="col-lg-8">
+        <div class="col-lg-10">
 
             <div class="text-center mb-5">
-                <h2 class="display-6 fw-bold text-dark mb-2">
+                <h2 class="display-6 fw-bold text-primary mb-2">
                     <i class="bi bi-safe-fill me-2 text-primary"></i> Detalhes do Caixa
                 </h2>
                 <a href="{% url 'list_registers' %}" class="btn btn-link text-secondary fw-semibold">
@@ -14,21 +14,24 @@
                 </a>
             </div>
 
+            <!-- CARD DE RESUMO GERAL DO CAIXA -->
             <div class="card border-0 shadow-lg rounded-4 mb-5 p-4 bg-light">
                 <div class="card-body">
                     
                     <h3 class="fw-bold text-primary mb-3 text-center">
-                        Caixa do Dia: {{ register.register_date }}
+                        Caixa do dia {{ register.register_date }}
                     </h3>
 
                     <hr class="my-4">
                     
                     <div class="row text-center">
+                        <!-- Quantia Total -->
                         <div class="col-md-6 mb-3">
                             <p class="mb-1 text-dark fw-semibold"><i class="bi bi-currency-dollar me-2 text-success"></i> Quantia Total</p>
                             <span class="fw-bolder text-success display-5">R$ {{ register.amount }}</span>
                         </div>
 
+                        <!-- Status -->
                         <div class="col-md-6 mb-3">
                             <p class="mb-1 text-dark fw-semibold"><i class="bi bi-info-circle-fill me-2 text-secondary"></i> Status</p>
                             {% if register.is_opened %}
@@ -42,69 +45,101 @@
                             {% endif %}
                         </div>
                     </div>
+                    
+                    <!-- NOVO ELEMENTO: Resumo por Método de Pagamento (Valores Totais do Caixa) -->
+                    {% if register.values_per_method %}
+                    <div class="row mt-4 pt-3 border-top">
+                        <div class="col-12">
+                            <h5 class="fw-bold text-dark mb-3"><i class="bi bi-list-columns-reverse me-2 text-info"></i> Resumo por Método de Pagamento</h5>
+                            <div class="row g-3">
+                                {% for method, value in register.values_per_method.items %}
+                                <div class="col-12 col-sm-6 col-lg-4">
+                                    <div class="p-3 bg-white border border-info rounded-3 shadow-sm d-flex justify-content-between align-items-center">
+                                        <span class="fw-semibold text-muted">{{ method|capfirst }}</span>
+                                        <span class="fw-bolder text-info fs-5">R$ {{ value }}</span>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    <!-- FIM NOVO ELEMENTO -->
                 </div>
             </div>
+            <!-- FIM CARD DE RESUMO GERAL DO CAIXA -->
 
+            <!-- LISTAGEM DE PAGAMENTOS INDIVIDUAIS -->
             <h3 class="h4 fw-bold mb-4 text-dark text-center">
                 <i class="bi bi-journal-check me-2 text-primary"></i> Pagamentos Registrados
             </h3>
 
             <div class="list-group">
                 {% for payment in register.payments %}
-                <div class="list-group-item border-0 shadow-sm rounded-4 mb-3 p-4">
+                <div class="list-group-item border-0 shadow-lg rounded-4 mb-4 p-4">
                     <div class="d-flex justify-content-between align-items-start mb-3">
                         <div class="d-flex flex-column"> 
                             <h5 class="fw-bold text-dark mb-1">
                                 <i class="bi bi-person-circle me-2 text-primary"></i> {{ payment.student.name }}
                             </h5>
                             <h6 class="text-muted small mb-0"><i class="bi bi-tag-fill me-1"></i> Pacote: {{ payment.payment_package.name }}</h6>
+                            <p class="text-secondary small mt-1 mb-0"><i class="bi bi-cash-coin me-1"></i> Recebido por: <span class="fw-semibold">{{ payment.receiver }}</span></p>
                         </div>
                         
-                        <small class="text-secondary"><i class="bi bi-clock-history me-1"></i> {{ payment.created_at }}</small>
+                        <small class="text-secondary text-end"><i class="bi bi-clock-history me-1"></i> {{ payment.created_at }}</small>
                     </div>
 
                     <p class="mb-3 border-start border-3 ps-3 text-secondary small">
-                        <span class="fw-semibold">Observações:</span> {{ payment.observations|default:"-" }}
+                        <span class="fw-semibold">Observações:</span> {{ payment.observations|default:"Nenhuma observação." }}
                     </p>
-
-                    <p class="fw-bold mb-2 text-dark"><i class="bi bi-credit-card-2-back-fill me-2 text-info"></i> Detalhes do Valor</p>
+                    
+                    <!-- Detalhes do Valor por Método (No Pagamento Individual) -->
+                    <h6 class="fw-bold mb-2 text-dark"><i class="bi bi-credit-card-2-back-fill me-2 text-info"></i> Detalhes do Valor</h6>
                     <div class="row row-cols-1 row-cols-sm-2 g-2 mb-4">
                         {% if payment.payment_values %}
 
                             {% for value in payment.payment_values %}
                             <div class="col">
                                 <div class="bg-white p-3 border rounded-3 d-flex justify-content-between align-items-center">
-                                    <span><i class="bi bi-credit-card me-2 text-secondary"></i> {{ value.method }}</span>
-                                    <span class="fw-bold text-success fs-5">R$ {{ value.value }}</span>
+                                    <span class="fw-semibold"><i class="bi bi-credit-card me-2 text-secondary"></i> {{ value.method }}</span>
+                                    <span class="fw-bolder text-success fs-5">R$ {{ value.value }}</span>
                                 </div>
                             </div>
                             {% endfor %}
-
+                            
                         {% else %}
                             <div class="col-12">
                                 <div class="alert alert-danger-subtle text-danger-emphasis border-0 shadow-sm rounded-3 py-3 px-4 d-flex align-items-center" role="alert">
                                     <i class="bi bi-exclamation-triangle-fill me-3 fs-3"></i>
                                     <div>
                                         <p class="fw-bold mb-1">Pagamento Incompleto!</p>
-                                        <p class="mb-0 small">Este pagamento não possui nenhum valor registrado. Verifique e corrija para auditar o caixa.</p>
+                                        <p class="mb-0 small">Este pagamento não possui nenhum valor registrado. Corrija para auditar o caixa.</p>
                                     </div>
                                 </div>
                             </div>
                         {% endif %}
                     </div>
                     
+                    <!-- Total Pago (Pagamento Individual) -->
+                    {% if payment.payment_values %}
+                    <div class="d-flex justify-content-between align-items-center pt-3 border-top border-2 border-primary-subtle bg-light p-3 rounded-bottom-3">
+                        <h5 class="fw-bold text-dark mb-0"><i class="bi bi-calculator me-2 text-primary"></i> TOTAL PAGO</h5>
+                        <span class="fw-bolder text-primary display-6 text-nowrap mb-0">R$ {{ payment.total_values_amount }}</span>
+                    </div>
+                    {% endif %}
+                    
+                    <!-- Botão Refazer Registro -->
                     {% if register.is_opened %}
-                    <div class="d-flex justify-content-end pt-3 border-top">
-                      <form method='post'>
-                        {% csrf_token %}
+                    <div class="d-flex justify-content-end pt-3 mt-3 border-top">
+                        <form method='post'>
+                            {% csrf_token %}
 
-
-                        <input type="hidden" name="payment_id" value="{{payment.id}}">
-                        <input type="hidden" name="student_id" value="{{payment.student.id}}">
-                        <button type='submit' name="action" value="redo_payment" class="btn btn-sm btn-outline-warning text-dark fw-semibold rounded-pill px-3">
-                            <i class="bi bi-arrow-counterclockwise me-1"></i> Refazer Registro
-                        </button>
-                      </form>
+                            <input type="hidden" name="payment_id" value="{{payment.id}}">
+                            <input type="hidden" name="student_id" value="{{payment.student.id}}">
+                            <button type='submit' name="action" value="redo_payment" class="btn btn-sm btn-outline-warning text-dark fw-semibold rounded-pill px-3">
+                                <i class="bi bi-arrow-counterclockwise me-1"></i> Refazer Registro
+                            </button>
+                        </form>
                     </div>
                     {% endif %}
 
@@ -116,7 +151,9 @@
                 </div>
                 {% endfor %}
             </div>
-
+            <!-- FIM LISTAGEM DE PAGAMENTOS INDIVIDUAIS -->
+            
+            <!-- BOTÃO FECHAR CAIXA -->
             {% if register.is_opened %}
             <div class="d-grid mt-5">
                 <a href="{% url 'close_register' register.id %}" class="btn btn-warning btn-lg fw-bold text-dark shadow rounded-pill">

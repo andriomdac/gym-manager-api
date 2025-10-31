@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import date, datetime
 from typing import Any
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect, render
@@ -8,6 +8,7 @@ from frontend.utils.decorators import validate_session
 from frontend.src.client.student import StudentAPIClient
 from frontend.src.client.payment import PaymentAPIClient, PaymentMethodAPIClient, PaymentPackageAPIClient
 from frontend.src.client.register import RegisterAPIClient
+from icecream import ic
 
 
 
@@ -185,6 +186,18 @@ def add_value(request: HttpRequest, student_id: int, payment_id: int) -> HttpRes
 
     if payment_details.status_code == 200:
         context["payment_details"] = payment_details.json()
+        total_amount = 0
+        for i in context["payment_details"]["payment_values"]:
+            total_amount += i["value"]
+        context["total_amount"] = total_amount
+
+        formatted_next_pay_date = format_api_date(
+            original_date_str=context["payment_details"]["next_payment_date"],
+            original_format="%Y-%m-%d",
+            desired_format="%d/%m de %Y"
+        )
+        context["payment_details"]["next_payment_date"] = formatted_next_pay_date
+
     else:
         messages.error(request, f"{payment_details.json()}", extra_tags="danger")
 
@@ -245,9 +258,16 @@ def detail_student(request: HttpRequest, student_id: int) -> HttpResponse:
     client = StudentAPIClient()
     res = client.detail_student(request=request, student_id=student_id)
     payments = PaymentAPIClient(student_id=student_id).list_payments(request)
+    today = datetime.today().date()
 
     if payments.status_code == 200:
         payment_list = payments.json()["results"]
+        if payment_list:
+            most_recent_payment = payment_list[0]  
+            recent_payment_obj = datetime.strptime(most_recent_payment["next_payment_date"], "%Y-%m-%d").date()
+            if recent_payment_obj < today:
+                context["student_is_overdue"] = True
+
         for item in payment_list:
             item["next_payment_date"] = format_api_date(
                 original_date_str=item["next_payment_date"],
@@ -260,6 +280,8 @@ def detail_student(request: HttpRequest, student_id: int) -> HttpResponse:
                 desired_format="%d/%m de %Y às %H:%M"
             )
         context["payments"] = payment_list
+
+
 
     if res.status_code == 200:
         context["student"] = res.json()

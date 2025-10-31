@@ -9,7 +9,7 @@ from cash_registers.models import CashRegister
 
 from icecream import ic
 
-def build_payment_serializer(serializer: Serializer, student_id: str) -> Serializer:
+def build_payment_serializer(request, serializer: Serializer, student_id: str) -> Serializer:
     data = serializer.initial_data
     student = get_object_or_404(Student, id=student_id)
     today = timezone.localdate()
@@ -46,4 +46,5 @@ def build_payment_serializer(serializer: Serializer, student_id: str) -> Seriali
         payment_date=data.get("payment_date"),
         payment_package_id=data.get("payment_package")
     )
+    data["receiver"] = request.user.username
     return PaymentSerializer(data=data)

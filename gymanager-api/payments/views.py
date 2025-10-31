@@ -49,6 +49,7 @@ class PaymentsListCreateAPIView(APIView):
             gym_id = request.user.profile.gym.id
             serializer = PaymentSerializer(data=request.data)
             serializer = build_payment_serializer(
+                request,
                 serializer=serializer,
                 student_id=student_id,
             )
@@ -69,6 +70,8 @@ class PaymentDetailDeleteAPIView(APIView):
     def get_permissions(self):
         if self.request.method == "GET":
             return [AllowRoles(["staff", "manager"])]
+        if self.request.method == "DELETE":
+            return [AllowRoles(["manager"])]
         return [AllowRoles()]
 
     def get(

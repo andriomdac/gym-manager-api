@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.shortcuts import render, redirect
 from frontend.src.client.token import TokenAPIClient
 from frontend.utils.decorators import validate_session
@@ -21,6 +22,9 @@ def login(request):
             request.session["user"] = username
 
             return redirect("homepage")
+        else:
+            messages.error(request, "Login falhou. Verifique seu usuário e senha e tente novamente.", extra_tags="danger")
+            return redirect("login")
         
     return render(
         request,

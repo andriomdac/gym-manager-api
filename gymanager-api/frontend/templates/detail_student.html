@@ -3,103 +3,173 @@
 {% block content %}
 <div class="container py-5">
     <div class="row justify-content-center">
+        
         <div class="col-lg-8">
 
             <div class="text-center mb-5">
-                <h1 class="display-5 fw-bold text-dark mb-2">
-                    Detalhes do Aluno
+                <h1 class="display-5 fw-bold text-primary mb-2">
+                    <i class="bi bi-person-bounding-box me-3 text-primary"></i> Detalhes do Aluno
                 </h1>
+                
+                {# NOVO: ALERTA DE ATRASO DO ALUNO #}
+                {% if student_is_overdue %}
+                <div class="alert alert-danger shadow-sm rounded-3 mt-4" role="alert">
+                    <i class="bi bi-exclamation-triangle-fill me-2 fs-5"></i>
+                    <span class="fw-bold">ATENÇÃO:</span> O pagamento deste aluno está em <span class="fw-bolder text-decoration-underline">ATRASO</span>!
+                </div>
+                {% endif %}
+                
             </div>
 
-            <div class="card border-0 shadow-lg rounded-4 mb-5 p-3">
+            <div class="card border-0 shadow-xl rounded-4 mb-5 p-4 bg-white">
                 <div class="card-body">
+                    
                     <div class="d-flex align-items-center mb-4">
-                        <i class="bi bi-person-circle text-primary display-4 me-3"></i>
+                        <i class="bi bi-person-circle text-primary display-3 me-4"></i>
                         <div>
-                            <h3 class="fw-bold text-primary mb-0">
+                            <h3 class="fw-bold text-dark mb-0">
                                 {{ student.name }}
                             </h3>
-                            <p class="text-muted mb-0 small">ID de Matrícula: {{ student.id }}</p>
+                            <p class="text-muted mb-0 small mt-1">ID de Matrícula: <span class="fw-semibold">{{ student.id }}</span></p>
                         </div>
                     </div>
                     
-                    <hr class="mb-4">
+                    <hr class="my-4">
 
                     <div class="row text-center text-md-start">
-                        <div class="col-md-6 mb-3">
-                            <p class="mb-0 text-dark fw-semibold"><i class="bi bi-telephone-fill me-2 text-secondary"></i> Telefone</p>
-                            <span class="fs-5">{{ student.phone }}</span>
+                        
+                        <div class="col-md-6 mb-4">
+                            <p class="mb-1 text-dark fw-semibold"><i class="bi bi-telephone-fill me-2 text-success"></i> Telefone</p>
+                            <span class="fs-5 fw-bolder text-dark">{{ student.phone }}</span>
                         </div>
-                        <div class="col-md-6 mb-3">
-                            <p class="mb-0 text-dark fw-semibold"><i class="bi bi-card-text me-2 text-secondary"></i> Referência</p>
-                            <span class="fs-5">{{ student.reference|default:"Não Informada" }}</span>
+                        
+                        <div class="col-md-6 mb-4">
+                            <p class="mb-1 text-dark fw-semibold"><i class="bi bi-card-text me-2 text-info"></i> Referência</p>
+                            <span class="fs-5 fw-bolder text-dark">{{ student.reference|default:"Não Informada" }}</span>
                         </div>
                     </div>
 
                     <hr class="mt-2 mb-4">
 
-                    <div class="d-flex flex-wrap justify-content-center gap-2">
-                        <a href="{% url 'add_payment' student.id %}" class="btn btn-success fw-semibold rounded-pill px-4">
+                    <div class="d-flex justify-content-center gap-3">
+                        <a href="{% url 'add_payment' student.id %}" class="btn btn-success fw-semibold rounded-3 py-2 shadow-sm">
                             <i class="bi bi-cash-stack me-1"></i> Adicionar Pagamento
                         </a>
-                        <a href="#" class="btn btn-outline-primary fw-semibold rounded-pill px-4">
-                            <i class="bi bi-pencil-square me-1"></i> Editar
-                        </a>
-                        <a href="#" class="btn btn-outline-secondary fw-semibold rounded-pill px-4">
-                            <i class="bi bi-file-earmark-text me-1"></i> Ficha de Treino
-                        </a>
-                        <a href="#" class="btn btn-danger fw-semibold rounded-pill px-4">
-                            <i class="bi bi-trash-fill me-1"></i> Excluir
-                        </a>
+                        
+                        <div class="dropdown">
+                            <button class="btn btn-outline-secondary dropdown-toggle fw-semibold rounded-3 py-2 shadow-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-three-dots me-1"></i>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end shadow border-0 rounded-3">
+                                <li>
+                                    <a class="dropdown-item" href="#">
+                                        <i class="bi bi-pencil-square me-2 text-dark"></i> Editar Dados
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="#">
+                                        <i class="bi bi-file-earmark-text me-2 text-dark"></i> Ficha de Treino
+                                    </a>
+                                </li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <a class="dropdown-item text-danger fw-semibold" href="#">
+                                        <i class="bi bi-trash-fill me-2"></i> Excluir Aluno
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
             
-            <hr class="my-5">
-
             <h2 class="h3 fw-bold mb-4 text-center text-dark">
                 <i class="bi bi-clock-history me-2 text-primary"></i> Histórico de Pagamentos
             </h2>
 
-            <div class="list-group">
-            {% for payment in payments %}
-                <div class="list-group-item border-0 shadow-sm rounded-4 mb-3 p-4">
-                    <div class="d-flex justify-content-between align-items-start mb-3">
-                        <div>
-                            <h5 class="fw-bold mb-0 text-primary"><i class="bi bi-tag-fill me-2"></i> {{ payment.payment_package.name }}</h5>
-                            <small class="text-muted"><i class="bi bi-calendar-check me-1"></i> Registrado em: {{ payment.created_at }}</small>
-                        </div>
+            <div class="list-group list-group-flush">
+                {% for payment in payments %}
+                    <hr>
+                    
+                    {# ALTERAÇÃO AQUI: Define a classe da borda/destaque dinamicamente #}
+                    {% if forloop.first %}
+                        {# Se for o primeiro pagamento (o mais recente) #}
+                        {% if student_is_overdue %}
+                            {# E o aluno estiver em atraso, usa a cor DANGER (vermelho) #}
+                            {% with highlight_class="border-danger" badge_class="bg-danger" %}{% endwith %}
+                        {% else %}
+                            {# Se não estiver em atraso, usa a cor PRIMARY (azul) #}
+                            {% with highlight_class="border-primary" badge_class="bg-primary" %}{% endwith %}
+                        {% endif %}
+                    <div class="list-group-item border {{ highlight_class }} border-3 shadow-xl rounded-4 mb-4 p-4 bg-white">
+                    {% else %}
+                        {# Para pagamentos anteriores, usa o estilo padrão #}
+                    <div class="list-group-item border-0 shadow-sm rounded-4 mb-4 p-4 bg-white">
+                    {% endif %}
                         
-                        <span class="badge bg-danger-subtle text-danger-emphasis fw-semibold p-2 rounded-pill">
-                            <i class="bi bi-hourglass-split me-1"></i> Expira em {{ payment.next_payment_date }}
-                        </span>
-                    </div>
+                        <div class="d-flex flex-wrap justify-content-between align-items-start border-bottom pb-3 mb-3">
+                            
+                            <div class="d-flex flex-column mb-2 mb-sm-0">
+                                <h5 class="fw-bolder mb-1 text-primary text-nowrap">
+                                    <i class="bi bi-gift-fill me-2"></i> {{ payment.payment_package.name }}
+                                    {# Usa a variável badge_class definida acima para o destaque ATIVO/ATRASO #}
+                                    {% if forloop.first %}<span class="badge {{ badge_class|default:'bg-primary' }} ms-2 py-2 fw-semibold">
+                                        {% if student_is_overdue %}ATRASADO{% else %}ATIVO{% endif %}
+                                    </span>{% endif %}
+                                </h5>
+                                <small class="text-secondary text-nowrap">
+                                    <i class="bi bi-person-badge me-1"></i> Recebedor: <span class="fw-semibold">{{ payment.receiver }}</span>
+                                </small>
+                            </div>
+                            
+                            {# NOVO: Usa o 'badge_class' para o destaque, se for o primeiro pagamento e estiver em atraso #}
+                            <span class="badge {% if forloop.first and student_is_overdue %}bg-danger{% else %}bg-primary-subtle text-dark-emphasis{% endif %} fw-semibold p-2 rounded-pill ms-sm-3 mt-2 mt-sm-0">
+                                <i class="bi bi-hourglass-split me-1"></i> Próx. Pagamento: {{ payment.next_payment_date }}
+                            </span>
+                        </div>
 
-                    <p class="mb-3 border-start border-3 ps-3 text-secondary">
-                        <span class="fw-semibold">Observações:</span> {{ payment.observations|default:"Nenhuma observação." }}
-                    </p>
-
-                    <p class="fw-bold mb-2 text-dark"><i class="bi bi-currency-dollar me-2 text-success"></i> Detalhes do Pagamento</p>
-                    <div class="row row-cols-1 row-cols-sm-2 g-2">
-                        {% for value in payment.payment_values %}
-                        <div class="col">
-                            <div class="bg-light p-3 border rounded-3 d-flex justify-content-between align-items-center">
-                                <span><i class="bi bi-credit-card me-2 text-secondary"></i> {{ value.method }}</span>
-                                <span class="fw-bold text-success fs-5">R$ {{ value.value }}</span>
+                        <div class="row g-2 mb-3">
+                            <div class="col-12">
+                                <p class="mb-0 text-muted small fw-semibold">
+                                    <i class="bi bi-chat-left-text me-2"></i> Observações:
+                                </p>
+                                <p class="mb-0 border-start border-3 border-secondary ps-3 text-dark small">
+                                    {{ payment.observations|default:"Nenhuma observação." }}
+                                </p>
+                            </div>
+                            <div class="col-12 mt-2">
+                                <small class="text-muted">
+                                    <i class="bi bi-calendar-check me-1"></i> Registrado em: {{ payment.created_at }}
+                                </small>
                             </div>
                         </div>
-                        {% endfor %}
-                    </div>
-                </div>
-            {% empty %}
-            <div class="text-center text-muted py-5 border rounded-4 bg-light">
-                <i class="bi bi-exclamation-circle me-2 fs-4"></i>
-                <p class="mt-2 mb-0 fw-semibold">Nenhum pagamento registrado.</p>
-                <p class="small">Clique em "Adicionar Pagamento" para iniciar o histórico.</p>
-            </div>
-            {% endfor %}
-            </div>
 
+                        <div class="mt-4 pt-3 border-top">
+                            <p class="fw-bold mb-3 text-dark">
+                                <i class="bi bi-currency-dollar me-2 text-success"></i> Detalhes do Pagamento por Método
+                            </p>
+                            <div class="row row-cols-1 row-cols-sm-2 g-3">
+                                {% for value in payment.payment_values %}
+                                <div class="col">
+                                    <div class="bg-light p-3 border border-success-subtle rounded-3 d-flex justify-content-between align-items-center">
+                                        <span class="fw-medium text-dark">
+                                            <i class="bi bi-credit-card me-2 text-secondary"></i> {{ value.method }}
+                                        </span>
+                                        <span class="fw-bolder text-success fs-5 text-nowrap">R$ {{ value.value }}</span>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                {% empty %}
+                    <div class="text-center text-muted py-5 border rounded-4 bg-light">
+                        <i class="bi bi-exclamation-circle me-2 fs-4"></i>
+                        <p class="mt-2 mb-0 fw-semibold">Nenhum pagamento registrado.</p>
+                        <p class="small">Clique em "Adicionar Pagamento" para iniciar o histórico.</p>
+                    </div>
+                {% endfor %}
+            </div>
         </div>
     </div>
 </div>

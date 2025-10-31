@@ -1,0 +1,29 @@
+{% if messages %}
+<div class="container py-3">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show shadow-sm rounded-3 mb-3" role="alert">
+                <div class="d-flex align-items-center">
+                    {% if message.tags == 'success' %}
+                        <i class="bi bi-check-circle-fill me-2 fs-5"></i>
+                    {% elif message.tags == 'warning' %}
+                        <i class="bi bi-exclamation-triangle-fill me-2 fs-5"></i>
+                    {% elif message.tags == 'danger' %}
+                        <i class="bi bi-x-octagon-fill me-2 fs-5"></i>
+                    {% else %}
+                        <i class="bi bi-info-circle-fill me-2 fs-5"></i>
+                    {% endif %}
+                    
+                    <div>
+                        {{ message }}
+                    </div>
+                </div>
+                
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endif %}
