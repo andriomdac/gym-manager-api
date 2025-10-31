@@ -1,3 +1,4 @@
+from icecream import ic
 from django.contrib import messages
 from django.shortcuts import render, redirect
 from frontend.src.client.token import TokenAPIClient
@@ -23,6 +24,7 @@ def login(request):
 
             return redirect("homepage")
         else:
+            
             messages.error(request, "Login falhou. Verifique seu usuário e senha e tente novamente.", extra_tags="danger")
             return redirect("login")
         

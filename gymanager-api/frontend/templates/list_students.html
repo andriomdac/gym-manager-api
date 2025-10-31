@@ -67,7 +67,7 @@
                 {# Aplica borda vermelha e sombra maior se o pagamento estiver vencido #}
                 <a href="{% url 'detail_student' student.id %}" 
                    class="list-group-item list-group-item-action mb-3 rounded-4 p-4 text-decoration-none transition-shadow 
-                          {% if student.is_overdue %}border border-danger shadow-lg{% else %}border-0 shadow-sm{% endif %}">
+                          {% if student.is_overdue %}border border-danger{% else %}border-0 shadow-sm{% endif %}">
                     <div class="d-flex justify-content-between align-items-center">
                         <div class="d-flex align-items-center">
                             <div class="me-4 text-primary fs-3">
